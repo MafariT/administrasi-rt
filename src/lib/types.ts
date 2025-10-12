@@ -8,7 +8,7 @@ export type SuratRequest = {
   requester_id: string;
   letter_type: 'domisili' | 'usaha' | 'ktp' | 'kk';
   status: 'pending' | 'approved' | 'rejected';
-  form_data: Record<string, any>;
+  form_data: Record<string, unknown>;
   unique_number?: string | null;
   file_url?: string | null;
   created_at: string;
