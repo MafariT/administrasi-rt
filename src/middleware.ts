@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 
 const redirectRules = {
   protected: ['/dashboard', '/surat'],  // requires auth
-  public: ['/login'],                   // should NOT be visible when logged in
+  public: ['/login', '/register'],                   // should NOT be visible when logged in
   defaultRedirect: '/dashboard',        // where to send logged in users
   loginRedirect: '/login',              // where to send guests
 }
@@ -42,5 +42,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/surat/:path*', '/login'],
+  matcher: ['/dashboard/:path*', '/surat/:path*', '/login', '/register'],
 }
