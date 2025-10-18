@@ -1,11 +1,12 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import Footer from '@/components/Footer'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
+import Navbar from '@/components/Navbar'
 
 export default function HomePage() {
   return (
     <div className="bg-gray-50 flex flex-col min-h-screen">
+      <Navbar />
       <main className="flex-grow">
         <div className="container mx-auto px-6 py-16">
           {/* Hero Section */}
