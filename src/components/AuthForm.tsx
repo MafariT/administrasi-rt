@@ -12,10 +12,10 @@ export default function AuthForm({ mode }: AuthFormProps) {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [agreedToTerms, setAgreedToTerms] = useState(false)
-  
+
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  
+
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const router = useRouter()
@@ -83,7 +83,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
           <label className="text-sm font-medium text-gray-600">{isRegisterMode ? 'Buat password *' : 'Password'}</label>
           <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} required className="w-full px-4 py-2 mt-1 bg-white border border-gray-300 rounded-md focus:ring-primary focus:border-primary text-gray-600" />
           <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute inset-y-0 right-0 top-6 pr-3 flex items-center text-gray-500 hover:text-primary">
-            {showPassword ? <FaEyeSlash /> : <FaEye />}
+            {showPassword ? <FaEye /> : <FaEyeSlash />}
           </button>
         </div>
 
@@ -93,7 +93,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
             <label className="text-sm font-medium text-gray-600">Tulis ulang password *</label>
             <input type={showConfirmPassword ? 'text' : 'password'} value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required className="w-full px-4 py-2 mt-1 bg-white border border-gray-300 rounded-md focus:ring-primary focus:border-primary text-gray-600" />
             <button type="button" onClick={() => setShowConfirmPassword(!showConfirmPassword)} className="absolute inset-y-0 right-0 top-6 pr-3 flex items-center text-gray-500 hover:text-primary">
-              {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+              {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
             </button>
           </div>
         )}
@@ -109,7 +109,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
         )}
 
         {error && <p className="text-sm text-red-500 text-center">{error}</p>}
-        
+
         {/* Submit Button */}
         <button type="submit" disabled={!canSubmit} className="w-full px-4 py-3 font-bold text-white bg-primary rounded-lg hover:bg-primary-dark disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors">
           {loading ? 'Memproses...' : (isRegisterMode ? 'Daftar' : 'Masuk')}

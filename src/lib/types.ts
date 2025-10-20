@@ -3,8 +3,21 @@ export type ActionResult = {
   success: string | null;
 }
 
-export type AuthFormProps = {
+export interface AuthFormProps {
   mode: 'login' | 'register'
+}
+
+// ==========================================================
+//                         /BANTUAN
+// ==========================================================
+
+export type PostMeta = {
+  slug: string;
+  meta: { [key: string]: any };
+}
+
+export interface HelpSidebarProps {
+  posts: PostMeta[];
 }
 
 // export type SuratRequest = {
