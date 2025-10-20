@@ -13,7 +13,7 @@ export interface AuthFormProps {
 
 export type PostMeta = {
   slug: string;
-  meta: { [key: string]: any };
+  meta: { [key: string]: unknown };
 }
 
 export interface HelpSidebarProps {
