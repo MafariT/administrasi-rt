@@ -1,7 +1,7 @@
 'use client'
 
 import { useTransition } from 'react'
-import { verifyUserProfile } from '@/app/(admin)/admin/actions'
+import { verifyUserProfile } from '@/app/(admin)/admin/verifikasi/actions'
 
 export default function VerificationActions({ userId }: { userId: string }) {
   const [isPending, startTransition] = useTransition()

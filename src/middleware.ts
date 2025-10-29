@@ -2,12 +2,12 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 const redirectRules = {
-  protected: ['/admin', '/dashboard', '/surat'], // requires auth
-  auth: ['/login', '/register'],     // should NOT be visible when logged in
+  protected: ['/dashboard', '/surat'], // requires auth
+  auth: ['/login', '/register'],       // should NOT be visible when logged in
   defaultRedirect: '/dashboard',
   loginRedirect: '/login',
   profileCompletion: '/profile',
-  admin: ['/admin']
+  admin: '/admin',
 }
 
 export async function middleware(request: NextRequest) {
@@ -30,33 +30,46 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // Not logged in -> block protected routes
-  if (!user && redirectRules.protected.some(p => pathname.startsWith(p)))
+  const isProtected = redirectRules.protected.some(p => pathname.startsWith(p))
+  const isAuthPage = redirectRules.auth.includes(pathname)
+  const isAdminPage = pathname.startsWith(redirectRules.admin)
+  const isProfilePage = pathname.startsWith(redirectRules.profileCompletion)
+
+  // Not logged in -> block protected and admin routes
+  if (!user && (isProtected || isAdminPage)) {
     return redirectTo(redirectRules.loginRedirect)
+  }
 
   if (user) {
-    // Logged in -> block auth routes
-    if (redirectRules.auth.includes(pathname))
+    const role = user.user_metadata?.role ?? 'user'
+
+    // Logged in -> block auth
+    if (isAuthPage) {
       return redirectTo(redirectRules.defaultRedirect)
+    }
 
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('profile_status')
-      .single()
+    if (role !== 'admin') {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('profile_status')
+        .eq('id', user.id)
+        .single()
 
-    const verified = profile?.profile_status === 'verified'
-    const onProfilePage = pathname.startsWith(redirectRules.profileCompletion)
-    const onProtectedPage = redirectRules.protected.some(p => pathname.startsWith(p))
-    const onAdminPage = redirectRules.admin.some(p => pathname.startsWith(p))
+      const verified = profile?.profile_status === 'verified'
 
-    if (!verified && onProtectedPage && !onProfilePage)
-      return redirectTo(redirectRules.profileCompletion)
+      if (!verified && isProtected && !isProfilePage)
+        return redirectTo(redirectRules.profileCompletion)
 
-    if (verified && onProfilePage)
-      return redirectTo(redirectRules.defaultRedirect)
+      // if (verified && isProfilePage)
+      //   return redirectTo(redirectRules.defaultRedirect)
 
-    if (user.user_metadata.role !== "admin" && onAdminPage) {
-      return redirectTo(redirectRules.defaultRedirect)
+      if (isAdminPage)
+        return redirectTo(redirectRules.defaultRedirect)
+    }
+
+    // Admin user -> force to stay on /admin/*
+    if (role === 'admin' && !isAdminPage) {
+      return redirectTo(redirectRules.admin)
     }
   }
 
@@ -64,5 +77,12 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/surat/:path*', '/login', '/register', '/admin/:path*'],
+  matcher: [
+    '/dashboard/:path*',
+    '/surat/:path*',
+    '/login',
+    '/register',
+    '/profile/:path*',
+    '/admin/:path*',
+  ],
 }

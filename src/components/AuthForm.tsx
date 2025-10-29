@@ -52,7 +52,6 @@ export default function AuthForm({ mode }: AuthFormProps) {
       if (error) setError(error.message)
       else {
         router.push('/dashboard')
-        router.refresh()
       }
     }
     setLoading(false)
