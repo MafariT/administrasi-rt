@@ -2,10 +2,12 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 const redirectRules = {
-  protected: ['/dashboard', '/surat'],  // requires auth
-  public: ['/login', '/register'],                   // should NOT be visible when logged in
-  defaultRedirect: '/dashboard',        // where to send logged in users
-  loginRedirect: '/login',              // where to send guests
+  protected: ['/admin', '/dashboard', '/surat'], // requires auth
+  auth: ['/login', '/register'],     // should NOT be visible when logged in
+  defaultRedirect: '/dashboard',
+  loginRedirect: '/login',
+  profileCompletion: '/profile',
+  admin: ['/admin']
 }
 
 export async function middleware(request: NextRequest) {
@@ -14,14 +16,12 @@ export async function middleware(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() {
-          return request.cookies.getAll().map(({ name, value }) => ({ name, value }))
-        }
+        getAll: () => request.cookies.getAll().map(({ name, value }) => ({ name, value })),
       },
     }
   )
 
-  const { data: { session } } = await supabase.auth.getSession()
+  const { data: { user } } = await supabase.auth.getUser()
   const { pathname } = request.nextUrl
 
   const redirectTo = (path: string) => {
@@ -30,17 +30,39 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // unauthenticated user visiting protected route
-  if (!session && redirectRules.protected.some(p => pathname.startsWith(p)))
+  // Not logged in -> block protected routes
+  if (!user && redirectRules.protected.some(p => pathname.startsWith(p)))
     return redirectTo(redirectRules.loginRedirect)
 
-  // authenticated user visiting public route
-  if (session && redirectRules.public.includes(pathname))
-    return redirectTo(redirectRules.defaultRedirect)
+  if (user) {
+    // Logged in -> block auth routes
+    if (redirectRules.auth.includes(pathname))
+      return redirectTo(redirectRules.defaultRedirect)
+
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('profile_status')
+      .single()
+
+    const verified = profile?.profile_status === 'verified'
+    const onProfilePage = pathname.startsWith(redirectRules.profileCompletion)
+    const onProtectedPage = redirectRules.protected.some(p => pathname.startsWith(p))
+    const onAdminPage = redirectRules.admin.some(p => pathname.startsWith(p))
+
+    if (!verified && onProtectedPage && !onProfilePage)
+      return redirectTo(redirectRules.profileCompletion)
+
+    if (verified && onProfilePage)
+      return redirectTo(redirectRules.defaultRedirect)
+
+    if (user.user_metadata.role !== "admin" && onAdminPage) {
+      return redirectTo(redirectRules.defaultRedirect)
+    }
+  }
 
   return NextResponse.next()
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/surat/:path*', '/login', '/register'],
+  matcher: ['/dashboard/:path*', '/surat/:path*', '/login', '/register', '/admin/:path*'],
 }
