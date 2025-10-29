@@ -1,5 +1,5 @@
-import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { createClient } from './lib/supabase/server'
 
 const redirectRules = {
   protected: ['/dashboard', '/surat'], // requires auth
@@ -11,16 +11,8 @@ const redirectRules = {
 }
 
 export async function middleware(request: NextRequest) {
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll: () => request.cookies.getAll().map(({ name, value }) => ({ name, value })),
-      },
-    }
-  )
-
+  const supabase = createClient()
+  
   const { data: { user } } = await supabase.auth.getUser()
   const { pathname } = request.nextUrl
 
