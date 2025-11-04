@@ -1,15 +1,17 @@
 import AdminVerificationActions from '@/components/AdminVerificationActions';
 import { createClient } from '@/lib/supabase/server'
+import { cookies } from 'next/headers' // We need to import cookies
 
 export const dynamic = 'force-dynamic';
 
-export default async function AdminDashboard() {
-  const supabase = createClient()
+export default async function AdminVerificationPage() { // Renamed for clarity
+  const supabase = createClient() // Pass cookieStore to the client
 
+  // --- UPDATE THE SELECT STATEMENT ---
   const { data: profiles, error } = await supabase
-    .from('profiles')
-    .select('id, full_name, nik, nomor_kk, phone_number')
-    .eq('profile_status', 'submitted')
+    .from('warga')
+    .select('*') 
+    .eq('status', 'pending_verification')
 
   if (error) {
     console.error('Error fetching profiles:', error)
@@ -18,9 +20,9 @@ export default async function AdminDashboard() {
   return (
     <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-lg">
       <div className="border-b border-gray-200 pb-6 mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+        <h1 className="text-3xl font-bold text-gray-800">Verifikasi Warga Baru</h1>
         <p className="mt-2 text-gray-600">
-          Verifikasi profil pengguna baru
+          Tinjau dan verifikasi data pendaftar baru.
         </p>
       </div>
       
@@ -28,23 +30,24 @@ export default async function AdminDashboard() {
         <table className="min-w-full bg-white">
           <thead className="bg-gray-50">
             <tr>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Lengkap</th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIK</th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nomor KK</th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Telepon</th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+              <th className="th-style">Nama Lengkap</th>
+              <th className="th-style">NIK</th>
+              <th className="th-style">Nomor KK</th>
+              <th className="th-style">Telepon</th>
+              <th className="th-style">Aksi</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
             {profiles && profiles.length > 0 ? (
               profiles.map((profile) => (
                 <tr key={profile.id}>
-                  <td className="py-4 px-4 whitespace-nowrap text-sm font-medium text-gray-900">{profile.full_name}</td>
-                  <td className="py-4 px-4 whitespace-nowrap text-sm text-gray-500">{profile.nik}</td>
-                  <td className="py-4 px-4 whitespace-nowrap text-sm text-gray-500">{profile.nomor_kk}</td>
-                  <td className="py-4 px-4 whitespace-nowrap text-sm text-gray-500">{profile.phone_number}</td>
-                  <td className="py-4 px-4 whitespace-nowrap text-sm font-medium space-x-2">
-                  <AdminVerificationActions userId={profile.id} />
+                  <td className="td-style font-medium text-gray-900">{profile.full_name}</td>
+                  <td className="td-style text-gray-500">{profile.nik}</td>
+                  <td className="td-style text-gray-500">{profile.nomor_kk}</td>
+                  <td className="td-style text-gray-500">{profile.phone_number}</td>
+                  <td className="td-style font-medium space-x-2">
+                    {/* The userId is now a number (bigint), so we convert it to string */}
+                    <AdminVerificationActions userId={profile.id.toString()} />
                   </td>
                 </tr>
               ))

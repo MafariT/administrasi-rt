@@ -1,5 +1,4 @@
-import Navbar from "@/components/Navbar";
-import StatusBanner from "@/components/StatusBanner";
+import PublicNavbar from "@/components/PublicNavbar";
 
 export default function AppLayout({
   children,
@@ -8,8 +7,7 @@ export default function AppLayout({
 }) {
   return (
     <div className="min-h-screen bg-gray-100">
-      <Navbar />
-      <StatusBanner />
+      <PublicNavbar />
       <main className="container mx-auto p-4 sm:p-6 lg:p-8">
         {children}
       </main>

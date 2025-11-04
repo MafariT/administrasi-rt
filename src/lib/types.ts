@@ -7,6 +7,15 @@ export interface AuthFormProps {
   mode: 'login' | 'register'
 }
 
+export type WargaProfile = {
+  id: number;
+  full_name: string | null;
+  nik: string | null;
+  nomor_kk: string | null;
+  phone_number: string | null;
+  status: string;
+}
+
 // ==========================================================
 //                         /BANTUAN
 // ==========================================================
@@ -18,6 +27,21 @@ export type PostMeta = {
 
 export interface HelpSidebarProps {
   posts: PostMeta[];
+}
+
+// ==========================================================
+//                         DROPDOWN
+// ==========================================================
+
+
+export type DropdownItem = {
+  name: string
+  href: string
+}
+
+export interface DropdownProps {
+  title: string
+  items: DropdownItem[]
 }
 
 // export type SuratRequest = {

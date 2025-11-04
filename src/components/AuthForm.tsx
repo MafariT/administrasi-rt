@@ -23,8 +23,6 @@ export default function AuthForm({ mode }: AuthFormProps) {
 
   const isRegisterMode = mode === 'register';
 
-  const canSubmit = isRegisterMode ? agreedToTerms && !loading : !loading;
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError(null)
@@ -40,18 +38,16 @@ export default function AuthForm({ mode }: AuthFormProps) {
       const { error } = await supabase.auth.signUp({
         email,
         password,
-        // options: { emailRedirectTo: `${location.origin}/auth/callback` },
       })
       if (error) setError(error.message)
       else {
-        // alert('Pendaftaran berhasil! Silakan cek email Anda untuk verifikasi.')
         router.push('/login')
       }
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password })
       if (error) setError(error.message)
       else {
-        router.push('/dashboard')
+        router.push('/admin')
       }
     }
     setLoading(false)
@@ -65,10 +61,6 @@ export default function AuthForm({ mode }: AuthFormProps) {
       <p className="text-center text-gray-500 text-sm">
         {isRegisterMode ? 'Mulai dengan membuat akun anda' : 'Masuk dengan akun anda'}
       </p>
-
-      {isRegisterMode && (
-        <p className="text-xs text-red-500">* wajib diisi.</p>
-      )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Email Input */}
@@ -97,20 +89,10 @@ export default function AuthForm({ mode }: AuthFormProps) {
           </div>
         )}
 
-        {/* Terms & Conditions Checkbox */}
-        {isRegisterMode && (
-          <div className="flex items-center">
-            <input id="terms" name="terms" type="checkbox" checked={agreedToTerms} onChange={(e) => setAgreedToTerms(e.target.checked)} className="h-4 w-4 text-primary border-gray-300 rounded focus:ring-primary" />
-            <label htmlFor="terms" className="ml-2 block text-sm text-gray-700">
-              Saya setuju dengan <a href="#" className="font-medium text-primary hover:underline">syarat dan ketentuan</a> *
-            </label>
-          </div>
-        )}
-
         {error && <p className="text-sm text-red-500 text-center">{error}</p>}
 
         {/* Submit Button */}
-        <button type="submit" disabled={!canSubmit} className="w-full px-4 py-3 font-bold text-white bg-primary rounded-lg hover:bg-primary-dark disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors">
+        <button type="submit" className="w-full px-4 py-3 font-bold text-white bg-primary rounded-lg hover:bg-primary-dark disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors">
           {loading ? 'Memproses...' : (isRegisterMode ? 'Daftar' : 'Masuk')}
         </button>
       </form>

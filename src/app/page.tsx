@@ -1,12 +1,12 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRightIcon } from '@heroicons/react/24/outline'
-import Navbar from '@/components/Navbar'
+import PublicNavbar from '@/components/PublicNavbar'
 
 export default function HomePage() {
   return (
     <div className="bg-gray-50 flex flex-col min-h-screen">
-      <Navbar />
+      <PublicNavbar />
       <main className="flex-grow">
         <div className="container mx-auto px-6 py-16">
           {/* Hero Section */}
@@ -22,7 +22,7 @@ export default function HomePage() {
               <p className="mb-8">
                 Silahkan masuk untuk mengajukan surat atau daftar sebagai masyarakat.
               </p>
-              <div className="flex items-center space-x-6">
+              {/* <div className="flex items-center space-x-6">
                 <Link
                   href="/login"
                   className="px-6 py-2 border border-primary text-primary font-semibold rounded-full hover:bg-primary hover:text-white transition-colors"
@@ -36,7 +36,7 @@ export default function HomePage() {
                   Daftarkan Akunmu
                   <ArrowRightIcon className="h-4 w-4 ml-2" />
                 </Link>
-              </div>
+              </div> */}
             </div>
             <div className="flex justify-center md:justify-end">
               <div className="relative w-full max-w-lg h-64 rounded-xl overflow-hidden shadow-2xl">
