@@ -1,5 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
-import LogoutButton from './LogoutButton'
+import LogoutButton from '../LogoutButton'
 import Image from 'next/image'
 
 export default async function AdminNavbar() {

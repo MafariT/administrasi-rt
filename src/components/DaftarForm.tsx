@@ -48,7 +48,7 @@ export default function DaftarForm() {
   return (
     <form ref={formRef} action={formAction} className="space-y-6">
       {/* --- Bagian A --- */}
-      <FormSection title="Bagian A: Data Identitas Pemohon" description="Sesuai KTP & KK. Data ini akan digunakan untuk mengisi surat secara otomatis." />
+      <FormSection title="Data Identitas Pemohon" description="Sesuai KTP & KK." />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div><label htmlFor="full_name">Nama Lengkap *</label><input id="full_name" name="full_name" type="text" required className="input-field" /></div>
         <div><label htmlFor="nik">NIK *</label><input id="nik" name="nik" type="text" required pattern="\d{16}" title="NIK harus 16 digit" className="input-field" /></div>
@@ -64,7 +64,7 @@ export default function DaftarForm() {
       <div><label htmlFor="alamat_ktp">Alamat (Sesuai KTP) *</label><textarea id="alamat_ktp" name="alamat_ktp" required rows={3} className="input-field"></textarea></div>
 
       {/* --- Bagian B --- */}
-      <FormSection title="Bagian B: Data Domisili & Kontak" description="Data faktual untuk keperluan verifikasi dan notifikasi." />
+      <FormSection title="Data Domisili & Kontak" description="Data faktual untuk keperluan verifikasi dan notifikasi." />
       <div><label htmlFor="alamat_domisili">Alamat Domisili Saat Ini (di RT ini) *</label><textarea id="alamat_domisili" name="alamat_domisili" required rows={3} className="input-field"></textarea></div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div><label htmlFor="status_tempat_tinggal">Status Tempat Tinggal *</label><select id="status_tempat_tinggal" name="status_tempat_tinggal" required className="input-field"><option value="">Pilih...</option><option>Milik Sendiri</option><option>Kontrak/Sewa</option><option>Kost</option><option>Menumpang</option></select></div>
@@ -73,7 +73,7 @@ export default function DaftarForm() {
        <div><label htmlFor="email">Email (Opsional)</label><input id="email" name="email" type="email" className="input-field" /></div>
 
       {/* --- Bagian C --- */}
-      <FormSection title="Bagian C: Berkas Pendukung" description="Unggah foto atau scan KTP dan KK Anda untuk verifikasi." />
+      <FormSection title="Berkas Pendukung" description="Unggah foto atau scan KTP dan KK Anda untuk verifikasi." />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div><label htmlFor="ktp_file">Upload Foto/Scan KTP *</label><input id="ktp_file" name="ktp_file" type="file" required accept="image/*,.pdf" className="file-input" /></div>
           <div><label htmlFor="kk_file">Upload Foto/Scan KK *</label><input id="kk_file" name="kk_file" type="file" required accept="image/*,.pdf" className="file-input" /></div>

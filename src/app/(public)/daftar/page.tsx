@@ -2,7 +2,7 @@ import DaftarForm from '@/components/DaftarForm'
 
 export default function DaftarPage() {
   return (
-    <div className="container mx-auto py-16 px-6">
+    <div className="container mx-auto">
       <div className="w-full mx-auto bg-white p-8 sm:p-12 rounded-2xl border border-gray-200 shadow-lg">
         <div className="text-center border-b border-gray-200 pb-6 mb-6">
           <h1 className="text-3xl sm:text-4xl font-bold text-primary">

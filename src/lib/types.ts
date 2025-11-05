@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export type ActionResult = {
   error: string | null;
   success: string | null;
@@ -14,6 +16,14 @@ export type WargaProfile = {
   nomor_kk: string | null;
   phone_number: string | null;
   status: string;
+}
+
+export interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  title: string;
+  children: ReactNode;
+  size?: 'md' | 'lg' | 'xl';
 }
 
 // ==========================================================

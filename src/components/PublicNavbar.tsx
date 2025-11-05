@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import Image from 'next/image'
-import Dropdown from './Dropdown'
+import Dropdown from './base/Dropdown'
 import { FaFacebook, FaWhatsapp } from 'react-icons/fa'
 import { DropdownItem } from '@/lib/types'
 

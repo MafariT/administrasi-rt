@@ -1,31 +1,42 @@
-import AdminVerificationActions from '@/components/AdminVerificationActions';
+import AdminHeader from '@/components/Admin/AdminHeader'
+import AdminVerificationActions from '@/components/Admin/AdminVerificationActions'
+import SearchControls from '@/components/base/SearchControls'
 import { createClient } from '@/lib/supabase/server'
-import { cookies } from 'next/headers' // We need to import cookies
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic'
 
-export default async function AdminVerificationPage() { // Renamed for clarity
-  const supabase = createClient() // Pass cookieStore to the client
+export default async function AdminVerificationPage({ searchParams }: {
+  searchParams: Promise<{ search?: string }>
+}) {
+  const supabase = createClient();
+  const params = await searchParams;
 
-  // --- UPDATE THE SELECT STATEMENT ---
-  const { data: profiles, error } = await supabase
+  const searchQuery = params?.search ?? '';
+
+  let query = supabase
     .from('warga')
-    .select('*') 
+    .select('*')
     .eq('status', 'pending_verification')
 
-  if (error) {
-    console.error('Error fetching profiles:', error)
+  if (searchQuery) {
+    query = query.ilike('full_name', `%${searchQuery}%`);
   }
-  
+
+  const { data: profiles, error } = await query;
+  if (error) console.error('Error fetching warga:', error);
+
+
   return (
     <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-lg">
-      <div className="border-b border-gray-200 pb-6 mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Verifikasi Warga Baru</h1>
-        <p className="mt-2 text-gray-600">
-          Tinjau dan verifikasi data pendaftar baru.
-        </p>
+      <AdminHeader
+        title="Verifikasi Warga"
+        description="Tinjau dan verifikasi data pendaftar baru."
+      />
+
+      <div className="mb-6">
+        <SearchControls />
       </div>
-      
+
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white">
           <thead className="bg-gray-50">
@@ -46,14 +57,15 @@ export default async function AdminVerificationPage() { // Renamed for clarity
                   <td className="td-style text-gray-500">{profile.nomor_kk}</td>
                   <td className="td-style text-gray-500">{profile.phone_number}</td>
                   <td className="td-style font-medium space-x-2">
-                    {/* The userId is now a number (bigint), so we convert it to string */}
                     <AdminVerificationActions userId={profile.id.toString()} />
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={5} className="py-4 px-4 text-center text-sm text-gray-500">Tidak ada profil baru yang perlu diverifikasi.</td>
+                <td colSpan={5} className="py-4 px-4 text-center text-sm text-gray-500">
+                  Tidak ada profil baru yang perlu diverifikasi.
+                </td>
               </tr>
             )}
           </tbody>
