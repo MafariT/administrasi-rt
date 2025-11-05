@@ -6,7 +6,7 @@ import Modal from '../base/Modal'
 
 type WargaDetails = Awaited<ReturnType<typeof getWargaDetails>>
 
-const DetailItem = ({ label, value }: { label: string, value: any }) => (
+const DetailItem = ({ label, value }: { label: string, value: string }) => (
   <div>
     <p className="text-xs font-medium text-gray-500 uppercase tracking-wider">{label}</p>
     <p className="text-base text-gray-900">{value || '-'}</p>

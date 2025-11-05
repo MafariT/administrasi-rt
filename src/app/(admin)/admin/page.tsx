@@ -3,8 +3,9 @@ import Link from 'next/link'
 import { ClockIcon, CheckCircleIcon, InboxIcon } from '@heroicons/react/24/outline'
 import { format, subDays, startOfDay } from 'date-fns'
 import WeeklyChart from '@/components/Admin/Charts/WeeklyChart';
+import { SupabaseClient } from '@supabase/auth-helpers-nextjs';
 
-function StatCard({ title, value, icon: Icon, href }: { title: string, value: number, icon: any, href: string }) {
+function StatCard({ title, value, icon: Icon, href }: { title: string, value: number, icon: React.ComponentType<React.SVGProps<SVGSVGElement>>, href: string }) {
   return (
     <Link href={href} className="group block bg-white p-6 rounded-2xl border border-gray-200 hover:border-primary hover:bg-gray-50 transition-all">
       <div className="flex justify-between items-start">
@@ -20,7 +21,7 @@ function StatCard({ title, value, icon: Icon, href }: { title: string, value: nu
   )
 }
 
-async function getWeeklyRegistrationData(supabase: any) {
+async function getWeeklyRegistrationData(supabase: SupabaseClient) {
   const today = startOfDay(new Date());
   const days = Array.from({ length: 7 }).map((_, i) => subDays(today, i)).reverse();
 
