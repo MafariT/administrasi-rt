@@ -17,8 +17,7 @@ export default function FilterControls() {
 
   const handleFilter = (status: string) => {
     const params = new URLSearchParams(searchParams)
-    if (status === 'all') params.delete('status')
-    else params.set('status', status)
+    params.set('status', status)
     router.replace(`${pathname}?${params.toString()}`)
   }
 

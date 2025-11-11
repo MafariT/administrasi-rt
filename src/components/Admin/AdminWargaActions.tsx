@@ -1,20 +1,32 @@
 'use client'
+
 import { useState, useTransition } from 'react'
 import { deleteWarga } from '@/app/(admin)/admin/users/actions'
 import EditWargaModal from './EditWargaModal'
 import toast from 'react-hot-toast'
 import { WargaProfile } from '@/lib/types'
 
-export default function AdminWargaActions({ warga }: { warga: WargaProfile }) {
+export default function AdminWargaActions({
+  warga,
+  onActionComplete,
+}: {
+  warga: WargaProfile
+  onActionComplete: () => void
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
 
   const handleDelete = () => {
-    if (window.confirm('Apakah Anda yakin ingin menghapus data warga ini? Tindakan ini akan menghapus data dan berkas terkait secara permanen.')) {
+    if (
+      window.confirm(
+        'Apakah Anda yakin ingin menghapus data warga ini? Tindakan ini akan menghapus data dan berkas terkait secara permanen.'
+      )
+    ) {
       startTransition(async () => {
         const result = await deleteWarga(warga.id.toString())
         if (result.success) {
           toast.success(result.message)
+          onActionComplete()
         } else {
           toast.error(`Error: ${result.message}`)
         }
@@ -25,12 +37,30 @@ export default function AdminWargaActions({ warga }: { warga: WargaProfile }) {
   return (
     <>
       <div className="flex space-x-2">
-        <button onClick={() => setIsModalOpen(true)} className="text-blue-600 hover:text-blue-900 text-xs">Edit</button>
-        <button onClick={handleDelete} disabled={isPending} className="text-red-600 hover:text-red-900 text-xs disabled:text-gray-400">
+        <button
+          onClick={() => setIsModalOpen(true)}
+          className="text-blue-600 hover:text-blue-900 text-xs"
+        >
+          Edit
+        </button>
+        <button
+          onClick={handleDelete}
+          disabled={isPending}
+          className="text-red-600 hover:text-red-900 text-xs disabled:text-gray-400"
+        >
           {isPending ? '...' : 'Hapus'}
         </button>
       </div>
-      <EditWargaModal warga={warga} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+
+      <EditWargaModal
+        warga={warga}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onActionComplete={() => {
+          setIsModalOpen(false)
+          onActionComplete()
+        }}
+      />
     </>
   )
 }

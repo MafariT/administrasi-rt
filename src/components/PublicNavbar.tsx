@@ -35,7 +35,7 @@ export default function PublicNavbar() {
         </div>
 
         {/* Bottom Tier (Sub-Navigation) */}
-        <div className="flex justify-center items-center space-x-8 py-2 border-t border-white/20">
+        <div className="flex justify-center items-center space-x-8 py-2">
           <Link href="/" className="text-sm font-medium text-white hover:text-gray-200 transition-colors">
             Beranda
           </Link>

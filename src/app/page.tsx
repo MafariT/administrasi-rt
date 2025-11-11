@@ -23,28 +23,27 @@ export default function HomePage() {
   ]
 
   const services = [
-    { name: 'Surat Pengantar Domisili', description: 'Untuk keperluan administrasi kependudukan.' },
-    { name: 'Surat Keterangan Usaha', description: 'Sebagai bukti legalitas usaha di tingkat RT.' },
-    { name: 'Surat Pengantar Lainnya', description: 'Untuk pengurusan KTP, KK, dan kebutuhan lainnya.' },
+    { name: 'Surat Pengantar Domisili', description: 'Untuk keperluan administrasi kependudukan.', image: '/img/service-1.jpeg' },
+    { name: 'Surat Keterangan Usaha', description: 'Sebagai bukti legalitas usaha di tingkat RT.', image: '/img/service-2.jpeg' },
+    { name: 'Surat Pengantar Lainnya', description: 'Untuk pengurusan KTP, KK, dan kebutuhan lainnya.', image: '/img/service-3.jpeg' },
   ]
 
   return (
     <main className="bg-gradient-to-b from-primary/5 via-white to-white text-gray-800 min-h-screen">
       <PublicNavbar />
-
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
+      <section className="relative overflow-hidden h-screen">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent blur-3xl" />
 
         <div className="relative container mx-auto px-6 py-24 sm:py-32 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div>
             <h1 className="text-4xl md:text-5xl font-extrabold leading-tight text-gray-900">
-              Urusan Surat Pengantar RT,
-              <br />
+              Urusan Surat Pengantar RT, <br />
               <span className="text-primary">Kini di Ujung Jari Anda.</span>
             </h1>
             <p className="mt-4 text-lg text-gray-600 leading-relaxed">
               Layanan digital untuk pendaftaran warga dan pengajuan surat pengantar di lingkungan RT 012 Puri Kemajuan secara mandiri, cepat, dan transparan.
+              Sekarang, warga cukup daftar secara online dan memantau prosesnya langsung dari rumah.
             </p>
             <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <Link
@@ -64,13 +63,13 @@ export default function HomePage() {
           </div>
 
           <div className="flex justify-center md:justify-end relative">
-            <div className="relative w-full max-w-lg h-72 rounded-2xl overflow-hidden shadow-2xl ring-1 ring-primary/10">
+            <div className="flex justify-center">
               <Image
-                src="/img/hero-image.png"
-                alt="Hero Image"
-                fill
-                style={{ objectFit: 'cover' }}
-                className="scale-105 hover:scale-110 transition-transform duration-700"
+                src="/img/hero-illustration.svg"
+                alt="Ilustrasi layanan digital"
+                width={500}
+                height={300}
+                priority
               />
             </div>
           </div>
@@ -78,46 +77,60 @@ export default function HomePage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-24 bg-gray-50/80 backdrop-blur-sm rounded-3xl mx-4 md:mx-12 mt-8 shadow-sm">
+      <section className="rounded-3xl mx-4 md:mx-12 mt-8">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Cara Kerja Layanan</h2>
           <p className="mt-3 text-gray-600">Hanya dalam 3 langkah mudah.</p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 px-6 md:px-12">
-          {processSteps.map((step) => (
-            <div
-              key={step.name}
-              className="p-8 bg-white/80 border border-gray-100 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
-            >
-              <div className="flex items-center justify-center h-16 w-16 mx-auto bg-primary/10 rounded-full mb-6">
-                <step.icon className="h-8 w-8 text-primary" aria-hidden="true" />
+        <div className="container mx-auto px-6 md:px-12">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            {processSteps.map((step) => (
+              <div
+                key={step.name}
+                className="p-8 bg-white/80 border border-gray-100 rounded-2xl shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-200"
+              >
+                <div className="flex items-center justify-center h-16 w-16 mx-auto bg-primary/10 rounded-full mb-6">
+                  <step.icon className="h-8 w-8 text-primary" aria-hidden="true" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900">{step.name}</h3>
+                <p className="mt-3 text-gray-600 text-sm leading-relaxed">{step.description}</p>
               </div>
-              <h3 className="text-xl font-semibold text-gray-900">{step.name}</h3>
-              <p className="mt-3 text-gray-600 text-sm leading-relaxed">{step.description}</p>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Services */}
-      <section className="py-24 container mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Layanan yang Tersedia</h2>
-          <p className="mt-3 text-gray-600">Ajukan surat sesuai kebutuhan Anda.</p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-          {services.map((service) => (
-            <div
-              key={service.name}
-              className="group bg-white p-8 rounded-2xl border border-gray-100 shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-200"
-            >
-              <h3 className="text-xl font-bold text-primary mb-3 group-hover:text-primary-dark">
-                {service.name}
-              </h3>
-              <p className="text-gray-600 leading-relaxed">{service.description}</p>
-            </div>
-          ))}
+      <section className="py-24">
+        <div className="container mx-auto px-6">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">Layanan yang Tersedia</h2>
+            <p className="mt-3 text-gray-600">Ajukan surat sesuai kebutuhan Anda.</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {services.map((service) => (
+              <div
+                key={service.name}
+                className="flex flex-col bg-white rounded-2xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
+              >
+                <div className="relative h-48 w-full">
+                  <Image
+                    src={service.image}
+                    alt={`Ilustrasi untuk ${service.name}`}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <div className="p-6 flex-grow">
+                  <h3 className="text-xl font-bold text-primary mb-2">
+                    {service.name}
+                  </h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">{service.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </main>

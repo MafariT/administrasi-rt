@@ -1,9 +1,12 @@
-import { createClient } from '@/lib/supabase/server'
-import Link from 'next/link'
-import { ClockIcon, CheckCircleIcon, InboxIcon } from '@heroicons/react/24/outline'
-import { format, subDays, startOfDay } from 'date-fns'
+'use client'
+
+import { useState, useEffect } from 'react';
+import { createClient } from '@/lib/supabase/client';
+import Link from 'next/link';
+import { ClockIcon, CheckCircleIcon, InboxIcon } from '@heroicons/react/24/outline';
+import { format, subDays, startOfDay } from 'date-fns';
 import WeeklyChart from '@/components/Admin/Charts/WeeklyChart';
-import { SupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { SkeletonChart, SkeletonStatCard } from '@/components/base/SkeletonLoader';
 
 function StatCard({ title, value, icon: Icon, href }: { title: string, value: number, icon: React.ComponentType<React.SVGProps<SVGSVGElement>>, href: string }) {
   return (
@@ -21,46 +24,69 @@ function StatCard({ title, value, icon: Icon, href }: { title: string, value: nu
   )
 }
 
-async function getWeeklyRegistrationData(supabase: SupabaseClient) {
-  const today = startOfDay(new Date());
-  const days = Array.from({ length: 7 }).map((_, i) => subDays(today, i)).reverse();
+type Stat = { title: string, value: number, icon: any, href: string };
+type ChartData = { name: string, pendaftar: number };
 
-  const promises = days.map(day =>
-    supabase
-      .from('warga')
-      .select('id', { count: 'exact', head: true })
-      .gte('created_at', day.toISOString())
-      .lt('created_at', new Date(day.getTime() + 24 * 60 * 60 * 1000).toISOString())
-  );
+export default function AdminOverviewPage() {
+  const [stats, setStats] = useState<Stat[]>([]);
+  const [chartData, setChartData] = useState<ChartData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const results = await Promise.all(promises);
+  useEffect(() => {
+    const supabase = createClient();
 
-  return days.map((day, i) => ({
-    name: format(day, 'EEE'),
-    pendaftar: results[i].count ?? 0,
-  }));
-}
+    async function getWeeklyRegistrationData() {
+      const supabase = createClient();
+      const today = startOfDay(new Date());
+      const days = Array.from({ length: 7 }).map((_, i) => subDays(today, i)).reverse();
 
-export default async function AdminOverviewPage() {
-  const supabase = createClient()
+      const promises = days.map(day =>
+        supabase
+          .from('warga')
+          .select('id', { count: 'exact', head: true })
+          .gte('created_at', day.toISOString())
+          .lt('created_at', new Date(day.getTime() + 24 * 60 * 60 * 1000).toISOString())
+      );
 
-  const [
-    pendingVerificationCount,
-    terdaftarCount,
-    pendingSuratCount,
-    chartData,
-  ] = await Promise.all([
-    supabase.from('warga').select('id', { count: 'exact', head: true }).eq('status', 'pending_verification'),
-    supabase.from('warga').select('id', { count: 'exact', head: true }).eq('status', 'terdaftar'),
-    supabase.from('surat_requests').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
-    getWeeklyRegistrationData(supabase)
-  ]);
+      const results = await Promise.all(promises);
 
-  const stats = [
-    { title: 'Menunggu Verifikasi', value: pendingVerificationCount.count ?? 0, icon: ClockIcon, href: '/admin/verifikasi' },
-    { title: 'Warga Terdaftar', value: terdaftarCount.count ?? 0, icon: CheckCircleIcon, href: '/admin/users' },
-    { title: 'Surat Baru', value: pendingSuratCount.count ?? 0, icon: InboxIcon, href: '#' },
-  ]
+      return days.map((day, i) => ({
+        name: format(day, 'EEE'),
+        pendaftar: results[i].count ?? 0,
+      }));
+    }
+
+    const fetchDashboardData = async () => {
+      setIsLoading(true);
+      try {
+        const [
+          pendingVerificationCount,
+          terdaftarCount,
+          pendingSuratCount,
+          weeklyData,
+        ] = await Promise.all([
+          supabase.from('warga').select('id', { count: 'exact', head: true }).eq('status', 'pending_verification'),
+          supabase.from('warga').select('id', { count: 'exact', head: true }).eq('status', 'terdaftar'),
+          supabase.from('surat_requests').select('id', { count: 'exact', head: true }).eq('status', 'pending'),
+          getWeeklyRegistrationData()
+        ]);
+
+        setStats([
+          { title: 'Menunggu Verifikasi', value: pendingVerificationCount.count ?? 0, icon: ClockIcon, href: '/admin/verifikasi' },
+          { title: 'Warga Terdaftar', value: terdaftarCount.count ?? 0, icon: CheckCircleIcon, href: '/admin/users' },
+          { title: 'Surat Baru', value: pendingSuratCount.count ?? 0, icon: InboxIcon, href: '#' },
+        ]);
+        setChartData(weeklyData);
+
+      } catch (error) {
+        console.error("Error fetching dashboard data:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDashboardData();
+  }, []);
 
   return (
     <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-lg">
@@ -71,15 +97,25 @@ export default async function AdminOverviewPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {stats.map(stat => (
-            <StatCard key={stat.title} {...stat} />
-          ))}
+          {isLoading ? (
+            <>
+              <SkeletonStatCard />
+              <SkeletonStatCard />
+              <SkeletonStatCard />
+            </>
+          ) : (
+            stats.map(stat => <StatCard key={stat.title} {...stat} />)
+          )}
         </div>
 
-        <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-lg">
-          <h2 className="text-xl font-semibold text-gray-700 mb-4">Pendaftar Baru (7 Hari Terakhir)</h2>
-          <WeeklyChart data={chartData} />
-        </div>
+        {isLoading ? (
+          <SkeletonChart />
+        ) : (
+          <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-lg">
+            <h2 className="text-xl font-semibold text-gray-700 mb-4">Pendaftar Baru (7 Hari Terakhir)</h2>
+            <WeeklyChart data={chartData} />
+          </div>
+        )}
       </div>
     </div>
   )
