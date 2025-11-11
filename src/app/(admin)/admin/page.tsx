@@ -24,7 +24,7 @@ function StatCard({ title, value, icon: Icon, href }: { title: string, value: nu
   )
 }
 
-type Stat = { title: string, value: number, icon: any, href: string };
+type Stat = { title: string, value: number, icon: React.ComponentType<React.SVGProps<SVGSVGElement>>, href: string };
 type ChartData = { name: string, pendaftar: number };
 
 export default function AdminOverviewPage() {
