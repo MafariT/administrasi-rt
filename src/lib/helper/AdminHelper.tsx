@@ -4,8 +4,8 @@ import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
 import { ClockIcon, CheckCircleIcon, InboxIcon } from '@heroicons/react/24/outline';
 import { format, subDays, startOfDay } from 'date-fns';
-import WeeklyChart from '@/components/Admin/Charts/WeeklyChart';
 import { SupabaseClient } from '@supabase/supabase-js';
+import { WeeklyChart } from '@/components/Admin/Charts/RegistrationChart';
 
 
 interface TableProps {

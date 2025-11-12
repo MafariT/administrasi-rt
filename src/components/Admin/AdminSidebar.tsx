@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { UserGroupIcon, CheckBadgeIcon, HomeIcon, EnvelopeIcon, ClockIcon } from '@heroicons/react/24/outline'
+import { UserGroupIcon, CheckBadgeIcon, HomeIcon, EnvelopeIcon, XMarkIcon } from '@heroicons/react/24/outline'
 
 const navigationGroups = [
   {
@@ -22,22 +22,35 @@ const navigationGroups = [
     title: 'Manajemen Surat',
     items: [
       { name: 'Permintaan Baru', href: '/admin/surat', icon: EnvelopeIcon },
-      { name: 'Riwayat Surat', href: '/admin/surat/riwayat', icon: ClockIcon },
     ]
   }
 ]
 
-export default function AdminSidebar() {
+interface AdminSidebarProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+}
+
+export default function AdminSidebar({ isOpen, setIsOpen }: AdminSidebarProps) {
   const pathname = usePathname()
 
   return (
-    <aside className="w-64 flex-shrink-0 bg-white p-6 rounded-2xl border border-gray-200 shadow-lg">
-      <h2 className="text-xl font-bold text-primary mb-6">Admin Menu</h2>
+    <aside
+      className={`fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 shadow-lg transform transition-transform duration-300 ease-in-out ${
+        isOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+    >
+      <div className="flex items-center justify-between p-6 border-b">
+        <h2 className="text-xl font-bold text-primary">Admin Menu</h2>
+        <button onClick={() => setIsOpen(false)} className="md:hidden p-1 rounded-full hover:bg-gray-100">
+          <XMarkIcon className="h-6 w-6 text-gray-500" />
+        </button>
+      </div>
 
-      <nav className="space-y-6">
+      <nav className="p-4 space-y-6">
         {navigationGroups.map((group) => (
           <div key={group.title}>
-            <h3 className="px-3 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">
+            <h3 className="px-3 text-xs font-semibold text-primary uppercase tracking-wider mb-2">
               {group.title}
             </h3>
             <div className="space-y-1">

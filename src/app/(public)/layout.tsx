@@ -1,4 +1,4 @@
-import PublicNavbar from "@/components/PublicNavbar";
+import Navbar from "@/components/Navbar";
 
 export default function PublicLayout({
   children,
@@ -7,7 +7,7 @@ export default function PublicLayout({
 }) {
   return (
     <div className="min-h-screen bg-gray-100">
-      <PublicNavbar />
+      <Navbar />
       <main className="container mx-auto p-4 sm:p-6 lg:p-8">
         {children}
       </main>

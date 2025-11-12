@@ -32,7 +32,7 @@ export default function EditWargaModal({
         <input type="hidden" name="id" value={warga.id} />
 
         <div>
-          <label className="text-sm font-medium">Nama Lengkap</label>
+          <label className="text-black font-medium">Nama Lengkap</label>
           <input
             name="full_name"
             defaultValue={warga.full_name ?? ''}
@@ -41,7 +41,7 @@ export default function EditWargaModal({
         </div>
 
         <div>
-          <label className="text-sm font-medium">NIK</label>
+          <label className="text-black font-medium">NIK</label>
           <input
             name="nik"
             defaultValue={warga.nik ?? ''}
@@ -50,7 +50,7 @@ export default function EditWargaModal({
         </div>
 
         <div>
-          <label className="text-sm font-medium">Nomor KK</label>
+          <label className="text-black font-medium">Nomor KK</label>
           <input
             name="nomor_kk"
             defaultValue={warga.nomor_kk ?? ''}
@@ -59,7 +59,7 @@ export default function EditWargaModal({
         </div>
 
         <div>
-          <label className="text-sm font-medium">Telepon</label>
+          <label className="text-black font-medium">Telepon</label>
           <input
             name="phone_number"
             defaultValue={warga.phone_number ?? ''}
@@ -68,7 +68,7 @@ export default function EditWargaModal({
         </div>
 
         <div>
-          <label className="text-sm font-medium">Status</label>
+          <label className="text-black font-medium">Status</label>
           <select
             name="status"
             defaultValue={warga.status}
@@ -84,13 +84,13 @@ export default function EditWargaModal({
           <button
             type="button"
             onClick={onClose}
-            className="bg-gray-200 px-4 py-2 rounded-md text-sm font-semibold hover:bg-gray-300"
+            className="bg-gray-200 px-4 py-2 rounded-md text-black font-semibold hover:bg-gray-300"
           >
             Batal
           </button>
           <button
             type="submit"
-            className="bg-primary text-white px-4 py-2 rounded-md text-sm font-semibold hover:bg-primary-dark"
+            className="bg-primary text-white px-4 py-2 rounded-md text-black font-semibold hover:bg-primary-dark"
           >
             Simpan Perubahan
           </button>

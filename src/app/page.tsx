@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRightIcon, UserPlusIcon, DocumentCheckIcon, EnvelopeIcon } from '@heroicons/react/24/outline'
-import PublicNavbar from '@/components/PublicNavbar'
+import Navbar from '@/components/Navbar'
 
 export default function HomePage() {
   const processSteps = [
@@ -30,7 +30,7 @@ export default function HomePage() {
 
   return (
     <main className="bg-gradient-to-b from-primary/5 via-white to-white text-gray-800 min-h-screen">
-      <PublicNavbar />
+      <Navbar />
       {/* Hero Section */}
       <section className="relative overflow-hidden h-screen">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent blur-3xl" />
