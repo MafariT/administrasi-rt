@@ -6,10 +6,8 @@ import toast from 'react-hot-toast'
 
 export default function AdminVerificationActions({
   userId,
-  onActionComplete,
 }: {
   userId: string
-  onActionComplete?: () => void
 }) {
   const [isPending, startTransition] = useTransition()
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -23,7 +21,6 @@ export default function AdminVerificationActions({
       const result = action === 'verify' ? await verifyWarga(userId) : await rejectWarga(userId)
       if (result.success) {
         toast.success(result.message)
-        onActionComplete?.()
       } else {
         toast.error(result.message)
       }

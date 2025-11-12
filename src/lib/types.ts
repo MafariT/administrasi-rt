@@ -26,6 +26,14 @@ export interface ModalProps {
   size?: 'md' | 'lg' | 'xl';
 }
 
+export type FormState = {
+  success: boolean;
+  message: string;
+  errors?: {
+    [key: string]: string[] | undefined;
+  };
+}
+
 // ==========================================================
 //                         /BANTUAN
 // ==========================================================
@@ -53,22 +61,3 @@ export interface DropdownProps {
   title: string
   items: DropdownItem[]
 }
-
-// export type SuratRequest = {
-//   id: number;
-//   requester_id: string;
-//   letter_type: 'domisili' | 'usaha' | 'ktp' | 'kk';
-//   status: 'pending' | 'approved' | 'rejected';
-//   form_data: Record<string, unknown>;
-//   unique_number?: string | null;
-//   file_url?: string | null;
-//   created_at: string;
-// };
-
-// export type Profile = {
-//   id: string;
-//   full_name?: string | null;
-//   role: 'warga' | 'rt_admin';
-//   created_at: string;
-// };
-

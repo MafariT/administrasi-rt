@@ -8,10 +8,8 @@ import { WargaProfile } from '@/lib/types'
 
 export default function AdminWargaActions({
   warga,
-  onActionComplete,
 }: {
   warga: WargaProfile
-  onActionComplete: () => void
 }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
@@ -26,7 +24,6 @@ export default function AdminWargaActions({
         const result = await deleteWarga(warga.id.toString())
         if (result.success) {
           toast.success(result.message)
-          onActionComplete()
         } else {
           toast.error(`Error: ${result.message}`)
         }
@@ -58,7 +55,6 @@ export default function AdminWargaActions({
         onClose={() => setIsModalOpen(false)}
         onActionComplete={() => {
           setIsModalOpen(false)
-          onActionComplete()
         }}
       />
     </>

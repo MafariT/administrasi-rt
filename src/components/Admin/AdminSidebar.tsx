@@ -15,7 +15,7 @@ const navigationGroups = [
     title: 'Manajemen Warga',
     items: [
       { name: 'Verifikasi Baru', href: '/admin/verifikasi', icon: CheckBadgeIcon },
-      { name: 'Semua Warga', href: '/admin/users?status=all', icon: UserGroupIcon },
+      { name: 'Semua Warga', href: '/admin/users', icon: UserGroupIcon },
     ]
   },
   {
