@@ -26,3 +26,23 @@ export const wargaSchema = z.object({
     .refine((file) => file.size <= MAX_FILE_SIZE, `Ukuran file maksimal adalah 5MB.`)
     .refine((file) => ACCEPTED_IMAGE_TYPES.includes(file.type), "Format file tidak valid. Hanya .jpg, .png, .webp, dan .pdf."),
 });
+
+export const updateWargaSchema = z.object({
+  id: z.string(),
+  full_name: z.string().min(3, { message: "Nama lengkap harus diisi." }),
+  nik: z.string().length(16, { message: "NIK harus terdiri dari 16 digit." }),
+  nomor_kk: z.string().length(16, { message: "Nomor KK harus terdiri dari 16 digit." }),
+  tempat_lahir: z.string().min(1, { message: "Tempat lahir harus diisi." }),
+  tanggal_lahir: z.string().refine((date) => !isNaN(Date.parse(date)), { message: "Tanggal lahir tidak valid." }),
+  jenis_kelamin: z.enum(["Laki-laki", "Perempuan"], { message: "Harap pilih jenis kelamin." }),
+  agama: z.string().min(1, { message: "Agama harus dipilih." }),
+  status_perkawinan: z.string().min(1, { message: "Status perkawinan harus dipilih." }),
+  pekerjaan: z.string().min(1, { message: "Pekerjaan harus diisi." }),
+  kewarganegaraan: z.string().min(1, { message: "Kewarganegaraan harus diisi." }),
+  alamat_ktp: z.string().min(10, { message: "Alamat KTP harus diisi." }),
+  alamat_domisili: z.string().min(10, { message: "Alamat domisili harus diisi." }),
+  status_tempat_tinggal: z.string().min(1, { message: "Status tempat tinggal harus dipilih." }),
+  phone_number: z.string().min(10, { message: "Nomor WhatsApp tidak valid." }),
+  email: z.string().email({ message: "Format email tidak valid." }).optional().or(z.literal('')),
+  status: z.enum(['pending_verification', 'terdaftar', 'ditolak']),
+});

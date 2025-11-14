@@ -2,16 +2,29 @@ import AdminVerificationActions from '@/components/Admin/AdminVerificationAction
 import AdminWargaActions from '@/components/Admin/AdminWargaActions';
 import { createClient } from '@/lib/supabase/server';
 import Link from 'next/link';
-import { ClockIcon, CheckCircleIcon, InboxIcon } from '@heroicons/react/24/outline';
-import { format, subDays, startOfDay } from 'date-fns';
+import { ClockIcon, CheckCircleIcon, InboxIcon, UserPlusIcon, CheckBadgeIcon } from '@heroicons/react/24/outline';
+import { format, subDays, startOfDay, formatDistanceToNow } from 'date-fns';
+import { id } from 'date-fns/locale';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { WeeklyChart } from '@/components/Admin/Charts/RegistrationChart';
+import { Badge } from '@/components/ui/badge';
+import { ActivityItem } from '../types';
 
 
 interface TableProps {
   statusFilter: string;
   searchQuery: string;
 }
+
+const iconMap = {
+  'Pendaftaran Baru': UserPlusIcon,
+  'Warga Diverifikasi': CheckBadgeIcon,
+};
+
+const colorMap = {
+  'Pendaftaran Baru': 'bg-yellow-100 text-yellow-700',
+  'Warga Diverifikasi': 'bg-green-100 text-green-700',
+};
 
 export async function VerificationTable({ searchQuery }: { searchQuery: string }) {
   const supabase = createClient();
@@ -86,12 +99,23 @@ export async function UserManagementTable({ statusFilter, searchQuery }: TablePr
             <td className="td-style font-medium text-gray-900">{warga.full_name}</td>
             <td className="td-style text-gray-500 font-mono">{warga.nik}</td>
             <td className="td-style">
-              <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${warga.status === 'terdaftar' ? 'bg-green-100 text-green-800' :
-                warga.status === 'pending_verification' ? 'bg-yellow-100 text-yellow-800' :
-                  'bg-red-100 text-red-800'
-                }`}>
-                {warga.status.replace('_', ' ')}
-              </span>
+              {warga.status === 'terdaftar' && (
+                <Badge className="bg-green-100 text-green-800 dark:bg-green-300">
+                  Terdaftar
+                </Badge>
+              )}
+
+              {warga.status === 'pending_verification' && (
+                <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-300 dark:text-black">
+                  Pending Verification
+                </Badge>
+              )}
+
+              {warga.status === 'ditolak' && (
+                <Badge className="bg-red-100 text-red-800 dark:bg-red-300 dark:text-black">
+                  Ditolak
+                </Badge>
+              )}
             </td>
             <td className="td-style font-medium">
               <AdminWargaActions warga={warga} />
@@ -142,11 +166,97 @@ export async function RegistrationChart() {
   const chartData = await getWeeklyRegistrationData(supabase as SupabaseClient);
 
   return (
-    <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-lg">
+    <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200">
       <h2 className="text-xl font-semibold text-gray-700 mb-4">Pendaftar Baru (7 Hari Terakhir)</h2>
       <WeeklyChart data={chartData} />
     </div>
   );
+}
+
+export async function RecentActivity() {
+  const supabase = createClient();
+  const activities = await getRecentActivity(supabase);
+
+  if (activities.length === 0) {
+    return (
+      <div className="text-center py-8 text-sm text-gray-500">
+        Belum ada aktivitas terbaru.
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 h-full">
+      <h2 className="text-xl font-semibold text-gray-700 mb-4">Aktivitas Terbaru</h2>
+      <div className="space-y-4">
+        {activities.map((activity, index) => {
+          const Icon = iconMap[activity.type];
+          const colors = colorMap[activity.type];
+          return (
+            <div key={`${activity.id}-${index}`} className="flex items-center space-x-3">
+              <div className={`p-2 rounded-full ${colors}`}>
+                <Icon className="h-5 w-5" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-gray-800">
+                  {activity.type === 'Pendaftaran Baru' ? 'Pendaftar baru:' : 'Warga diverifikasi:'}
+                  <span className="font-semibold"> {activity.fullName}</span>
+                </p>
+                <p className="text-xs text-gray-500">
+                  {formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true, locale: id })}
+                </p>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+async function getRecentActivity(supabase: SupabaseClient): Promise<ActivityItem[]> {
+  try {
+    const { data: newRegistrations, error: regError } = await supabase
+      .from('warga')
+      .select('id, full_name, created_at')
+      .order('created_at', { ascending: false })
+      .limit(5);
+
+    if (regError) throw regError;
+
+    const { data: newVerifications, error: verError } = await supabase
+      .from('warga')
+      .select('id, full_name, verified_at')
+      .not('verified_at', 'is', null) // Only get rows where verified_at is not null
+      .order('verified_at', { ascending: false })
+      .limit(5);
+
+    if (verError) throw verError;
+
+    const formattedRegistrations: ActivityItem[] = newRegistrations.map(item => ({
+      id: item.id,
+      type: 'Pendaftaran Baru',
+      fullName: item.full_name,
+      timestamp: item.created_at,
+    }));
+
+    const formattedVerifications: ActivityItem[] = newVerifications.map(item => ({
+      id: item.id,
+      type: 'Warga Diverifikasi',
+      fullName: item.full_name,
+      timestamp: item.verified_at!,
+    }));
+
+    const combinedActivities = [...formattedRegistrations, ...formattedVerifications];
+
+    combinedActivities.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
+
+    return combinedActivities.slice(0, 5);
+
+  } catch (error) {
+    console.error('Error fetching recent activity:', error);
+    return [];
+  }
 }
 
 async function getWeeklyRegistrationData(supabase: SupabaseClient) {

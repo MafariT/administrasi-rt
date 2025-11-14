@@ -2,25 +2,44 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { updateWargaSchema } from '@/lib/validations'
+
+export async function getWargaDetailsForEdit(userId: string) {
+  const supabase = createClient()
+  const { data, error } = await supabase
+    .from('warga')
+    .select('*')
+    .eq('id', userId)
+    .single()
+
+  if (error) {
+    console.error("Error fetching warga details:", error.message);
+    return null;
+  }
+  return data;
+}
 
 export async function updateWargaProfile(formData: FormData) {
   const supabase = createClient()
   
-  const wargaData = {
-    full_name: formData.get('full_name') as string,
-    nik: formData.get('nik') as string,
-    nomor_kk: formData.get('nomor_kk') as string,
-    phone_number: formData.get('phone_number') as string,
-    status: formData.get('status') as string,
+  const rawData = Object.fromEntries(formData.entries());
+  
+  const validatedFields = updateWargaSchema.safeParse(rawData);
+  if (!validatedFields.success) {
+    console.error("Validation failed:", validatedFields.error.flatten().fieldErrors);
+    return { success: false, message: 'Data tidak valid.' };
   }
-  const wargaId = formData.get('id') as string
+  
+  const { id, ...wargaData } = validatedFields.data;
 
   const { error } = await supabase
     .from('warga')
     .update(wargaData)
-    .eq('id', wargaId)
+    .eq('id', id)
 
-  if (error) return { success: false, message: error.message }
+  if (error) {
+    return { success: false, message: error.message }
+  }
   
   revalidatePath('/admin/users')
   return { success: true, message: 'Data warga berhasil diperbarui.' }

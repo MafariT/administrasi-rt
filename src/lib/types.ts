@@ -34,6 +34,14 @@ export type FormState = {
   };
 }
 
+export type ActivityItem = {
+  id: number;
+  type: 'Pendaftaran Baru' | 'Warga Diverifikasi';
+  fullName: string | null;
+  timestamp: string;
+};
+
+
 // ==========================================================
 //                         /BANTUAN
 // ==========================================================

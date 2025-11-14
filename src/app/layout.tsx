@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import '../styles/global.css'
 import Footer from '@/components/base/Footer'
-import { Toaster } from 'react-hot-toast'
 import NextTopLoader from 'nextjs-toploader';
+import { Toaster } from 'sonner';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -25,7 +25,7 @@ export default function RootLayout({
           showSpinner={false}
           shadow={false}
         />
-        <Toaster position="top-center" reverseOrder={false} />
+        <Toaster richColors position="top-center" />
         <div className="flex flex-col min-h-screen">
           {/* Page content */}
           <main className="flex-grow">
