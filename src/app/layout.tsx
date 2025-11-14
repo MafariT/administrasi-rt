@@ -4,6 +4,8 @@ import '../styles/global.css'
 import Footer from '@/components/base/Footer'
 import NextTopLoader from 'nextjs-toploader';
 import { Toaster } from 'sonner';
+import { Analytics } from "@vercel/analytics/next"
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -30,6 +32,8 @@ export default function RootLayout({
           {/* Page content */}
           <main className="flex-grow">
             {children}
+            <Analytics />
+            <SpeedInsights />
           </main>
           <Footer />
         </div>
