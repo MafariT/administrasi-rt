@@ -22,7 +22,6 @@ export default function AdminLayout({
       >
         <AdminHeader
           toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)}
-          userEmail={user?.email}
         />
         <main className="py-10 px-6">
           {children}

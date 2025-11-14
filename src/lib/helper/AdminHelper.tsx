@@ -107,7 +107,7 @@ export async function UserManagementTable({ statusFilter, searchQuery }: TablePr
 
               {warga.status === 'pending_verification' && (
                 <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-300 dark:text-black">
-                  Pending Verification
+                  Pending
                 </Badge>
               )}
 

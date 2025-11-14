@@ -36,7 +36,7 @@ export default function AdminVerificationActions({ userId }: { userId: string })
 
   return (
     <>
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center space-x-4">
         <button
           onClick={() => setIsModalOpen(true)}
           disabled={isPending}
