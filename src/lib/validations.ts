@@ -46,11 +46,7 @@ export const wargaSchema = z.object({
     message: 'Status tempat tinggal harus dipilih.',
   }),
   phone_number: z.string().min(10, { message: 'Nomor WhatsApp tidak valid.' }),
-  email: z
-    .string()
-    .email({ message: 'Format email tidak valid.' })
-    .optional()
-    .or(z.literal('')),
+  email: z.email({ message: 'Format email tidak valid.' }).min(3),
   ktp_file: z
     .instanceof(File)
     .refine(
@@ -112,3 +108,33 @@ export const updateWargaSchema = z.object({
     .or(z.literal('')),
   status: z.enum(['pending_verification', 'terdaftar', 'ditolak']),
 });
+
+export const nikSchema = z.object({
+  nik: z
+    .string()
+    .length(16, { message: 'NIK harus terdiri dari 16 digit.' })
+    .regex(/^\d+$/, 'NIK hanya boleh berisi angka.'),
+});
+
+export const suratRequestSchema = z
+  .object({
+    warga_id: z.number(),
+    letter_type: z.string().min(1, { message: 'Harap pilih jenis surat.' }),
+    custom_letter_type: z.string().optional(),
+    keperluan: z.string().min(10, {
+      message:
+        'Harap jelaskan keperluan Anda secara singkat (minimal 10 karakter).',
+    }),
+  })
+  .refine(
+    (data) => {
+      if (data.letter_type === 'Lainnya...') {
+        return data.custom_letter_type && data.custom_letter_type.length > 0;
+      }
+      return true;
+    },
+    {
+      message: 'Harap sebutkan keperluan lainnya.',
+      path: ['custom_letter_type'],
+    }
+  );

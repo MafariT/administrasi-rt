@@ -93,7 +93,7 @@ export default function DaftarForm() {
         {/* --- Bagian A --- */}
         <FormSection
           title="Data Identitas Pemohon"
-          description="Sesuai KTP & KK."
+          description="Sesuai KTP & KK"
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
@@ -283,7 +283,7 @@ export default function DaftarForm() {
         {/* --- Bagian B --- */}
         <FormSection
           title="Data Domisili & Kontak"
-          description="Data faktual untuk keperluan verifikasi dan notifikasi."
+          description="Data faktual untuk keperluan verifikasi dan notifikasi"
         />
         <FormField
           control={form.control}
@@ -344,7 +344,7 @@ export default function DaftarForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email (Opsional)</FormLabel>
+              <FormLabel>Email *</FormLabel>
               <FormControl>
                 <Input type="email" {...field} />
               </FormControl>
@@ -356,7 +356,7 @@ export default function DaftarForm() {
         {/* --- Bagian C --- */}
         <FormSection
           title="Berkas Pendukung"
-          description="Unggah foto atau scan KTP dan KK Anda (Maksimal 5MB)."
+          description="Unggah foto atau scan KTP dan KK Anda (Maksimal 5MB)"
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField

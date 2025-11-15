@@ -13,19 +13,19 @@ export default function HomePage() {
     {
       name: '1. Pendaftaran Data',
       description:
-        'Isi formulir pendaftaran dengan data sesuai KTP & KK Anda. Unggah berkas yang diperlukan.',
+        'Isi formulir pendaftaran dengan data sesuai KTP & KK Anda. Unggah berkas yang diperlukan',
       icon: UserPlusIcon,
     },
     {
       name: '2. Verifikasi oleh RT',
       description:
-        'Ketua RT akan memeriksa data dan berkas yang Anda kirimkan untuk memastikan keabsahannya.',
+        'Ketua RT akan memeriksa data dan berkas yang Anda kirimkan untuk memastikan keabsahannya',
       icon: DocumentCheckIcon,
     },
     {
       name: '3. Pengajuan Surat',
       description:
-        'Setelah data Anda terverifikasi, Anda dapat langsung mengajukan berbagai jenis surat pengantar.',
+        'Setelah data Anda terverifikasi, Anda dapat langsung mengajukan berbagai jenis surat pengantar',
       icon: EnvelopeIcon,
     },
   ];
@@ -33,17 +33,17 @@ export default function HomePage() {
   const services = [
     {
       name: 'Surat Pengantar Domisili',
-      description: 'Untuk keperluan administrasi kependudukan.',
+      description: 'Untuk keperluan administrasi kependudukan',
       image: '/img/service-1.jpeg',
     },
     {
       name: 'Surat Keterangan Usaha',
-      description: 'Sebagai bukti legalitas usaha di tingkat RT.',
+      description: 'Sebagai bukti legalitas usaha di tingkat RT',
       image: '/img/service-2.jpeg',
     },
     {
       name: 'Surat Pengantar Lainnya',
-      description: 'Untuk pengurusan KTP, KK, dan kebutuhan lainnya.',
+      description: 'Untuk pengurusan KTP, KK, dan kebutuhan lainnya',
       image: '/img/service-3.jpeg',
     },
   ];
@@ -59,13 +59,13 @@ export default function HomePage() {
           <div>
             <h1 className="text-4xl md:text-5xl font-extrabold leading-tight text-gray-900">
               Urusan Surat Pengantar RT, <br />
-              <span className="text-primary">Kini di Ujung Jari Anda.</span>
+              <span className="text-primary">Kini di Ujung Jari Anda</span>
             </h1>
             <p className="mt-4 text-lg text-gray-600 leading-relaxed">
               Layanan digital untuk pendaftaran warga dan pengajuan surat
               pengantar di lingkungan RT 012 Puri Kemajuan secara mandiri,
               cepat, dan transparan. Sekarang, warga cukup daftar secara online
-              dan memantau prosesnya langsung dari rumah.
+              dan memantau prosesnya langsung dari rumah
             </p>
             <div className="mt-8 flex flex-col sm:flex-row items-start sm:items-center gap-4">
               <Link
@@ -101,10 +101,10 @@ export default function HomePage() {
       {/* How It Works */}
       <section className="rounded-3xl mx-4 md:mx-12 mt-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+          <h2 className="text-3xl md:text-4xl font-bold text-primary">
             Cara Kerja Layanan
           </h2>
-          <p className="mt-3 text-gray-600">Hanya dalam 3 langkah mudah.</p>
+          <p className="mt-3 text-gray-600">Hanya dalam 3 langkah mudah</p>
         </div>
 
         <div className="container mx-auto px-6 md:px-12">
@@ -136,11 +136,11 @@ export default function HomePage() {
       <section className="py-24">
         <div className="container mx-auto px-6">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
+            <h2 className="text-3xl md:text-4xl font-bold text-primary">
               Layanan yang Tersedia
             </h2>
             <p className="mt-3 text-gray-600">
-              Ajukan surat sesuai kebutuhan Anda.
+              Ajukan surat sesuai kebutuhan Anda
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

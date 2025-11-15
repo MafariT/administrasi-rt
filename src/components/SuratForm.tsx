@@ -1,11 +1,22 @@
 'use client';
 
-import { useState, useTransition } from 'react';
-import { submitSuratRequest, verifyNik } from '@/app/(public)/surat/actions';
+import { useTransition, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { nikSchema, suratRequestSchema } from '@/lib/validations';
+import { verifyNik, submitSuratRequest } from '@/app/(public)/surat/actions';
 import { toast } from 'sonner';
 import { Button } from './ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from './ui/form';
 import { Input } from './ui/input';
-import { Label } from './ui/label';
 import { Textarea } from './ui/textarea';
 import {
   Select,
@@ -38,11 +49,14 @@ export function NikCheckForm({
 }) {
   const [isPending, startTransition] = useTransition();
 
-  const handleNikCheck = async (formData: FormData) => {
-    const nik = formData.get('nik') as string;
+  const form = useForm<z.infer<typeof nikSchema>>({
+    resolver: zodResolver(nikSchema),
+    defaultValues: { nik: '' },
+  });
 
+  const onSubmit = (values: z.infer<typeof nikSchema>) => {
     startTransition(() => {
-      toast.promise(verifyNik(nik), {
+      toast.promise(verifyNik(values), {
         loading: 'Memeriksa NIK...',
         success: (result) => {
           if (!result.success) throw new Error(result.message);
@@ -55,22 +69,39 @@ export function NikCheckForm({
   };
 
   return (
-    <form action={handleNikCheck} className="space-y-4 max-w-md mx-auto">
-      <div className="space-y-2">
-        <Label htmlFor="nik">Nomor Induk Kependudukan (NIK)</Label>
-        <Input
-          id="nik"
-          name="nik"
-          type="text"
-          required
-          pattern="\d{16}"
-          placeholder="Masukkan 16 digit NIK Anda"
-        />
-      </div>
-      <Button type="submit" disabled={isPending} className="w-full">
-        {isPending ? <Spinner /> : 'Cek NIK'}
-      </Button>
-    </form>
+    <div className="text-center">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="mt-8 space-y-4 text-left"
+        >
+          <FormField
+            control={form.control}
+            name="nik"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Nomor Induk Kependudukan (NIK)</FormLabel>
+                <FormControl>
+                  <Input
+                    {...field}
+                    placeholder="Masukkan 16 digit NIK Anda"
+                    className="py-6"
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button
+            type="submit"
+            disabled={isPending}
+            className="w-full py-6 text-base"
+          >
+            {isPending ? <Spinner /> : 'Cek NIK'}
+          </Button>
+        </form>
+      </Form>
+    </div>
   );
 }
 
@@ -80,17 +111,26 @@ export function SuratRequestForm({
   warga: { id: number; full_name: string | null };
 }) {
   const [isPending, startTransition] = useTransition();
-  const [selectedLetterType, setSelectedLetterType] = useState('');
-  const handleSubmit = async (formData: FormData) => {
-    if (formData.get('letter_type') === 'Lainnya...') {
-      formData.set('letter_type', formData.get('custom_letter_type') || '');
-    }
 
+  const form = useForm<z.infer<typeof suratRequestSchema>>({
+    resolver: zodResolver(suratRequestSchema),
+    defaultValues: {
+      warga_id: warga.id,
+      letter_type: '',
+      custom_letter_type: '',
+      keperluan: '',
+    },
+  });
+
+  const letterType = form.watch('letter_type');
+
+  const onSubmit = (values: z.infer<typeof suratRequestSchema>) => {
     startTransition(() => {
-      toast.promise(submitSuratRequest(formData), {
+      toast.promise(submitSuratRequest(values), {
         loading: 'Mengirim pengajuan...',
         success: (result) => {
           if (!result.success) throw new Error(result.message);
+          form.reset();
           return result.message;
         },
         error: (error) => error.message,
@@ -99,59 +139,87 @@ export function SuratRequestForm({
   };
 
   return (
-    <form action={handleSubmit} className="space-y-6">
-      <input type="hidden" name="warga_id" value={warga.id} />
+    <>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+            <p className="text-sm text-green-800">NIK terverifikasi sebagai:</p>
+            <p className="font-bold text-lg text-green-900">
+              {warga.full_name}
+            </p>
+          </div>
 
-      <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-        <p className="text-sm text-green-800">NIK terverifikasi sebagai:</p>
-        <p className="font-bold text-lg text-green-900">{warga.full_name}</p>
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="letter_type">Jenis Surat yang Diperlukan</Label>
-        <Select
-          name="letter_type"
-          required
-          onValueChange={setSelectedLetterType}
-        >
-          <SelectTrigger id="letter_type" className="w-full">
-            <SelectValue placeholder="Pilih jenis surat..." />
-          </SelectTrigger>
-          <SelectContent>
-            {LETTER_TYPES.map((type) => (
-              <SelectItem key={type} value={type}>
-                {type}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {selectedLetterType === 'Lainnya...' && (
-        <div className="space-y-2 animate-in fade-in duration-300">
-          <Label htmlFor="custom_letter_type">Sebutkan Keperluan Lainnya</Label>
-          <Textarea
-            id="custom_letter_type"
-            name="custom_letter_type"
-            required
-            placeholder="Contoh: Surat Keterangan..."
+          <FormField
+            control={form.control}
+            name="letter_type"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Jenis Surat yang Diperlukan</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Pilih jenis surat..." />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {LETTER_TYPES.map((type) => (
+                      <SelectItem key={type} value={type}>
+                        {type}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-      )}
 
-      <div className="space-y-2">
-        <Label htmlFor="keperluan">Tujuan Penggunaan Surat</Label>
-        <Textarea
-          id="keperluan"
-          name="keperluan"
-          required
-          placeholder="Contoh: Untuk mengurus administrasi di kelurahan..."
-        />
-      </div>
+          {letterType === 'Lainnya...' && (
+            <FormField
+              control={form.control}
+              name="custom_letter_type"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Sebutkan Keperluan Lainnya</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      {...field}
+                      placeholder="Contoh: Surat Keterangan..."
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
-      <Button type="submit" disabled={isPending} className="w-full">
-        {isPending ? <Spinner /> : 'Ajukan Surat'}
-      </Button>
-    </form>
+          <FormField
+            control={form.control}
+            name="keperluan"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>
+                  Jelaskan Keperluan Anda (Tujuan Penggunaan Surat)
+                </FormLabel>
+                <FormControl>
+                  <Textarea
+                    {...field}
+                    placeholder="Contoh: Untuk mengurus administrasi di kelurahan..."
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button type="submit" disabled={isPending} className="w-full">
+            {isPending ? <Spinner /> : 'Ajukan Surat'}
+          </Button>
+        </form>
+      </Form>
+    </>
   );
 }

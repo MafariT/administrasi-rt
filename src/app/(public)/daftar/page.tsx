@@ -10,7 +10,7 @@ export default function DaftarPage() {
           </h1>
           <p className="mt-2 text-gray-600">
             Daftarkan diri Anda untuk dapat menggunakan layanan surat pengantar
-            online.
+            online
           </p>
         </div>
         <DaftarForm />

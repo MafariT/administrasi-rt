@@ -2,16 +2,15 @@
 
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
+import { nikSchema, suratRequestSchema } from '@/lib/validations';
+import z from 'zod';
 
-export async function verifyNik(nik: string) {
-  'use server';
-  if (!nik || nik.length !== 16) {
-    return {
-      success: false,
-      message: 'NIK tidak valid. Harap masukkan 16 digit NIK.',
-      data: null,
-    };
+export async function verifyNik(values: z.infer<typeof nikSchema>) {
+  const validatedFields = nikSchema.safeParse(values);
+  if (!validatedFields.success) {
+    return { success: false, message: 'Data NIK tidak valid.', data: null };
   }
+  const { nik } = validatedFields.data;
 
   const supabase = createClient();
 
@@ -58,24 +57,27 @@ export async function verifyNik(nik: string) {
   }
 }
 
-export async function submitSuratRequest(formData: FormData) {
+export async function submitSuratRequest(
+  values: z.infer<typeof suratRequestSchema>
+) {
   'use server';
   const supabase = createClient();
 
-  const wargaId = formData.get('warga_id') as string;
-  const letterType = formData.get('letter_type') as string;
-  const keperluan = formData.get('keperluan') as string;
+  const validatedFields = suratRequestSchema.safeParse(values);
+  if (!validatedFields.success) {
+    return { success: false, message: 'Data pengajuan tidak valid.' };
+  }
 
-  if (!wargaId || !letterType || !keperluan) {
-    return {
-      success: false,
-      message: 'Data tidak lengkap.',
-    };
+  let { warga_id, letter_type, custom_letter_type, keperluan } =
+    validatedFields.data;
+
+  if (letter_type === 'Lainnya...' && custom_letter_type) {
+    letter_type = custom_letter_type;
   }
 
   const { error } = await supabase.from('surat_requests').insert({
-    warga_id: parseInt(wargaId),
-    letter_type: letterType,
+    warga_id: warga_id,
+    letter_type: letter_type,
     form_data: { keperluan },
     status: 'pending',
   });
