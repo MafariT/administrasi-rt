@@ -1,61 +1,79 @@
-import AdminVerificationActions from '@/components/AdminVerificationActions';
+import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
+import { cookies } from 'next/headers'
+import SearchControls from '@/components/base/SearchControls'
+import PaginationControls from '@/components/base/PaginationControls'
+import { SkeletonRow } from '@/components/base/SkeletonLoader'
+import VerificationTable from '@/components/Admin/Tables/VerificationTable'
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic'
+const ITEMS_PER_PAGE = 10
 
-export default async function AdminDashboard() {
+export default async function AdminVerificationPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ search?: string; page?: string }>
+}) {
+  const params = await searchParams
+  const searchQuery = params?.search || ''
+  const currentPage = Number(params?.page) || 1
+
+  const cookieStore = cookies()
   const supabase = createClient()
+  let countQuery = supabase
+    .from('warga')
+    .select('id', { count: 'exact', head: true })
+    .eq('status', 'pending_verification')
+  if (searchQuery)
+    countQuery = countQuery.ilike('full_name', `%${searchQuery}%`)
+  const { count } = await countQuery
 
-  const { data: profiles, error } = await supabase
-    .from('profiles')
-    .select('id, full_name, nik, nomor_kk, phone_number')
-    .eq('profile_status', 'submitted')
-
-  if (error) {
-    console.error('Error fetching profiles:', error)
-  }
-  
   return (
     <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-lg">
-      <div className="border-b border-gray-200 pb-6 mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+      <div className="border-b border-gray-200 pb-6 mb-8">
+        <h1 className="text-3xl font-bold text-gray-800">Verifikasi Warga</h1>
         <p className="mt-2 text-gray-600">
-          Verifikasi profil pengguna baru
+          Tinjau dan verifikasi data pendaftar baru
         </p>
       </div>
-      
+
+      <div className="mb-6">
+        <SearchControls />
+      </div>
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white">
           <thead className="bg-gray-50">
             <tr>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nama Lengkap</th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">NIK</th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nomor KK</th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Telepon</th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Aksi</th>
+              <th className="th-style">Nama Lengkap</th>
+              <th className="th-style">NIK</th>
+              <th className="th-style">Nomor KK</th>
+              <th className="th-style">Telepon</th>
+              <th className="th-style">Aksi</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {profiles && profiles.length > 0 ? (
-              profiles.map((profile) => (
-                <tr key={profile.id}>
-                  <td className="py-4 px-4 whitespace-nowrap text-sm font-medium text-gray-900">{profile.full_name}</td>
-                  <td className="py-4 px-4 whitespace-nowrap text-sm text-gray-500">{profile.nik}</td>
-                  <td className="py-4 px-4 whitespace-nowrap text-sm text-gray-500">{profile.nomor_kk}</td>
-                  <td className="py-4 px-4 whitespace-nowrap text-sm text-gray-500">{profile.phone_number}</td>
-                  <td className="py-4 px-4 whitespace-nowrap text-sm font-medium space-x-2">
-                  <AdminVerificationActions userId={profile.id} />
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={5} className="py-4 px-4 text-center text-sm text-gray-500">Tidak ada profil baru yang perlu diverifikasi.</td>
-              </tr>
-            )}
+            <Suspense
+              key={searchQuery + currentPage}
+              fallback={
+                <>
+                  <SkeletonRow />
+                  <SkeletonRow />
+                </>
+              }
+            >
+              <VerificationTable
+                searchQuery={searchQuery}
+                currentPage={currentPage}
+                itemsPerPage={ITEMS_PER_PAGE}
+              />
+            </Suspense>
           </tbody>
         </table>
       </div>
+      <PaginationControls
+        totalCount={count ?? 0}
+        itemsPerPage={ITEMS_PER_PAGE}
+      />
     </div>
   )
 }

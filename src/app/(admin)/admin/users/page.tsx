@@ -1,53 +1,75 @@
-import AdminUsersActions from '@/components/AdminUsersActions';
+import { Suspense } from 'react'
 import { createClient } from '@/lib/supabase/server'
+import FilterControls from '@/components/base/FilterControls'
+import PaginationControls from '@/components/base/PaginationControls'
+import { SkeletonRow } from '@/components/base/SkeletonLoader'
+import UserManagementTable from '@/components/Admin/Tables/UserManagementTable'
 
-export const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic'
+const ITEMS_PER_PAGE = 10
 
-export default async function UserManagementPage() {
+export default async function UserManagementPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ status?: string; search?: string; page?: string }>
+}) {
+  const params = await searchParams
+  const statusFilter = params?.status || 'all'
+  const searchQuery = params?.search || ''
+  const currentPage = Number(params?.page) || 1
+
   const supabase = createClient()
-
-  const { data: profiles, error } = await supabase
-    .from('profiles')
-    .select('id, full_name, role, profile_status')
-    .order('created_at', { ascending: false });
-
-  if (error) console.error('Error fetching profiles:', error)
+  let countQuery = supabase
+    .from('warga')
+    .select('id', { count: 'exact', head: true })
+  if (statusFilter !== 'all') countQuery = countQuery.eq('status', statusFilter)
+  if (searchQuery)
+    countQuery = countQuery.ilike('full_name', `%${searchQuery}%`)
+  const { count } = await countQuery
 
   return (
     <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-lg">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">Manajemen Warga</h1>
+      <div className="border-b border-gray-200 pb-6 mb-8">
+        <h1 className="text-3xl font-bold text-gray-800">Manajemen Warga</h1>
+        <p className="mt-2 text-gray-600">
+          Lihat, cari, dan kelola data warga yang terdaftar di sistem.
+        </p>
+      </div>
+      <FilterControls />
       <div className="overflow-x-auto">
         <table className="min-w-full bg-white">
           <thead className="bg-gray-50">
             <tr>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase">Nama Lengkap</th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-              <th className="py-3 px-4 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+              <th className="th-style">Nama Lengkap</th>
+              <th className="th-style">NIK</th>
+              <th className="th-style">Status</th>
+              <th className="th-style">Aksi</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {profiles?.map((profile) => (
-              <tr key={profile.id}>
-                <td className="py-4 px-4 text-sm font-medium text-gray-900">{profile.full_name}</td>
-                <td className="py-4 px-4 text-sm text-gray-500">{profile.role}</td>
-                <td className="py-4 px-4 text-sm">
-                  <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                    profile.profile_status === 'verified' ? 'bg-green-100 text-green-800' :
-                    profile.profile_status === 'submitted' ? 'bg-yellow-100 text-yellow-800' :
-                    'bg-gray-100 text-gray-800'
-                  }`}>
-                    {profile.profile_status}
-                  </span>
-                </td>
-                <td className="py-4 px-4 text-sm font-medium space-x-2">
-                    <AdminUsersActions userId={profile.id} /> 
-                </td>
-              </tr>
-            ))}
+            <Suspense
+              key={statusFilter + searchQuery + currentPage}
+              fallback={
+                <>
+                  <SkeletonRow />
+                  <SkeletonRow />
+                </>
+              }
+            >
+              <UserManagementTable
+                statusFilter={statusFilter}
+                searchQuery={searchQuery}
+                currentPage={currentPage}
+                itemsPerPage={ITEMS_PER_PAGE}
+              />
+            </Suspense>
           </tbody>
         </table>
       </div>
+      <PaginationControls
+        totalCount={count ?? 0}
+        itemsPerPage={ITEMS_PER_PAGE}
+      />
     </div>
   )
 }

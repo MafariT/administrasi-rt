@@ -8,20 +8,20 @@ export default function HelpSidebar({ posts }: HelpSidebarProps) {
   const pathname = usePathname()
 
   return (
-    <aside className="w-64 flex-shrink-0 bg-white p-6 rounded-2xl border border-gray-200 shadow-lg">
-      <h2 className="text-xl font-bold text-primary mb-4">Topik Bantuan</h2>
+    <aside className="w-full md:w-64 flex-shrink-0 bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-gray-100 shadow-md sticky top-8 h-fit">
+      <h2 className="text-lg font-bold text-primary mb-4">Topik Bantuan</h2>
       <nav>
-        <ul>
+        <ul className="space-y-1">
           {posts.map((post) => {
             const isActive = pathname === `/bantuan/${post.slug}`
             return (
               <li key={post.slug}>
-                <Link 
+                <Link
                   href={`/bantuan/${post.slug}`}
-                  className={`block py-2 px-3 rounded-md transition-colors text-sm ${
-                    isActive 
-                      ? 'bg-primary text-white font-semibold' 
-                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                  className={`block py-2.5 px-3 rounded-lg text-sm font-medium transition-all ${
+                    isActive
+                      ? 'bg-primary text-white shadow-sm'
+                      : 'text-gray-700 hover:bg-primary/10 hover:text-primary'
                   }`}
                 >
                   {post.meta.title}
