@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} bg-gray-100`}>
         <NextTopLoader color="#61f8f1ff" showSpinner={false} shadow={false} />
-        <Toaster richColors position="top-center" />
+        <Toaster richColors position="top-center" duration={7000} />
         <div className="flex flex-col min-h-screen">
           {/* Page content */}
           <main className="flex-grow">

@@ -43,21 +43,21 @@ export default function SuratActions({ request }: { request: SuratRequest }) {
       <div className="flex items-center space-x-2">
         <button
           onClick={() => setIsModalOpen(true)}
-          className="text-blue-600 hover:text-blue-900 text-xs font-semibold"
+          className="text-blue-600 hover:text-blue-900 text-xs font-semibold disabled:text-gray-400"
         >
           Detail
         </button>
         <button
           onClick={() => handleAction('approve')}
           disabled={isPending}
-          className="text-white bg-green-600 hover:bg-green-700 px-3 py-1 rounded-md text-xs disabled:bg-gray-400"
+          className="text-green-800 bg-green-100 hover:bg-green-200 px-3 py-1 rounded-md text-xs disabled:bg-gray-400"
         >
           Setujui
         </button>
         <button
           onClick={() => handleAction('reject')}
           disabled={isPending}
-          className="text-white bg-red-600 hover:bg-red-700 px-3 py-1 rounded-md text-xs disabled:bg-gray-400"
+          className="text-red-800 bg-red-100 hover:bg-red-200 px-3 py-1 rounded-md text-xs disabled:bg-gray-400"
         >
           Tolak
         </button>
