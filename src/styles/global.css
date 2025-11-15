@@ -1,5 +1,5 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 @plugin "@tailwindcss/typography";
@@ -63,40 +63,39 @@
 :root {
   --radius: 0.625rem;
 
-  --background: #0D9488;
-  --foreground: #134E4A;
-  --card: #0F766E;
-  --card-foreground: #ECFDF5;
-  --popover: #115E59;
-  --popover-foreground: #ECFDF5;
-  --primary: #14B8A6;
-  --primary-foreground: #F0FDFA;
-  --secondary: #134E4A;
-  --secondary-foreground: #CCFBF1;
-  --muted: #155E59;
-  --muted-foreground: #134E4A;
+  --background: #0d9488;
+  --foreground: #134e4a;
+  --card: #0f766e;
+  --card-foreground: #ecfdf5;
+  --popover: #115e59;
+  --popover-foreground: #ecfdf5;
+  --primary: #14b8a6;
+  --primary-foreground: #f0fdfa;
+  --secondary: #134e4a;
+  --secondary-foreground: #ccfbf1;
+  --muted: #155e59;
+  --muted-foreground: #134e4a;
   --accent: #0d816e;
-  --accent-foreground: #ECFEFF;
-  --destructive: #DC2626;
-  --destructive-foreground: #FEE2E2;
-  --border: #134E4A;
-  --input: #134E4A;
-  --ring: #2DD4BF;
-  --chart-1: #14B8A6;
-  --chart-2: #0E7490;
-  --chart-3: #2DD4BF;
-  --chart-4: #99F6E4;
-  --chart-5: #115E59;
-  --sidebar: #0F766E;
-  --sidebar-foreground: #CCFBF1;
-  --sidebar-primary: #14B8A6;
-  --sidebar-primary-foreground: #ECFEFF;
-  --sidebar-accent: #115E59;
-  --sidebar-accent-foreground: #CCFBF1;
-  --sidebar-border: #134E4A;
-  --sidebar-ring: #2DD4BF;
+  --accent-foreground: #ecfeff;
+  --destructive: #dc2626;
+  --destructive-foreground: #fee2e2;
+  --border: #134e4a;
+  --input: #134e4a;
+  --ring: #2dd4bf;
+  --chart-1: #14b8a6;
+  --chart-2: #0e7490;
+  --chart-3: #2dd4bf;
+  --chart-4: #99f6e4;
+  --chart-5: #115e59;
+  --sidebar: #0f766e;
+  --sidebar-foreground: #ccfbf1;
+  --sidebar-primary: #14b8a6;
+  --sidebar-primary-foreground: #ecfeff;
+  --sidebar-accent: #115e59;
+  --sidebar-accent-foreground: #ccfbf1;
+  --sidebar-border: #134e4a;
+  --sidebar-ring: #2dd4bf;
 }
-
 
 .dark {
   --background: oklch(0.129 0.042 264.695);

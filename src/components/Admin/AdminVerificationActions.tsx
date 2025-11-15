@@ -1,22 +1,34 @@
-'use client'
+'use client';
 
-import { useState, useTransition } from 'react'
-import { verifyWarga, rejectWarga } from '@/app/(admin)/admin/verifikasi/actions'
-import VerificationDetailModal from './VerificationDetailModal'
-import { toast } from 'sonner'
+import { useState, useTransition } from 'react';
+import {
+  verifyWarga,
+  rejectWarga,
+} from '@/app/(admin)/admin/verifikasi/actions';
+import VerificationDetailModal from './VerificationDetailModal';
+import { toast } from 'sonner';
 
-export default function AdminVerificationActions({ userId }: { userId: string }) {
-  const [isPending, startTransition] = useTransition()
-  const [isModalOpen, setIsModalOpen] = useState(false)
+export default function AdminVerificationActions({
+  userId,
+}: {
+  userId: string;
+}) {
+  const [isPending, startTransition] = useTransition();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleAction = (action: 'verify' | 'reject') => {
     const isRejecting = action === 'reject';
-    if (isRejecting && !window.confirm('Apakah Anda yakin ingin menolak pendaftaran ini?')) {
+    if (
+      isRejecting &&
+      !window.confirm('Apakah Anda yakin ingin menolak pendaftaran ini?')
+    ) {
       return;
     }
 
     startTransition(() => {
-      const actionPromise = isRejecting ? rejectWarga(userId) : verifyWarga(userId);
+      const actionPromise = isRejecting
+        ? rejectWarga(userId)
+        : verifyWarga(userId);
 
       toast.promise(actionPromise, {
         loading: 'Memproses permintaan...',
@@ -65,5 +77,5 @@ export default function AdminVerificationActions({ userId }: { userId: string })
         onClose={() => setIsModalOpen(false)}
       />
     </>
-  )
+  );
 }

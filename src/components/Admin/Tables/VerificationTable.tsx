@@ -1,36 +1,36 @@
-import { createClient } from '@/lib/supabase/server'
-import AdminVerificationActions from '../AdminVerificationActions'
-import { TableProps } from '@/lib/types'
+import { createClient } from '@/lib/supabase/server';
+import AdminVerificationActions from '../AdminVerificationActions';
+import { TableProps } from '@/lib/types';
 
 export default async function VerificationTable({
   searchQuery,
   currentPage,
   itemsPerPage,
 }: TableProps) {
-  const supabase = createClient()
+  const supabase = createClient();
 
-  const from = (currentPage - 1) * itemsPerPage
-  const to = from + itemsPerPage - 1
+  const from = (currentPage - 1) * itemsPerPage;
+  const to = from + itemsPerPage - 1;
 
   let query = supabase
     .from('warga')
     .select('id, full_name, nik, nomor_kk, phone_number')
     .eq('status', 'pending_verification')
     .order('created_at', { ascending: true })
-    .range(from, to)
+    .range(from, to);
 
-  if (searchQuery) query = query.ilike('full_name', `%${searchQuery}%`)
+  if (searchQuery) query = query.ilike('full_name', `%${searchQuery}%`);
 
-  const { data: profiles, error } = await query
+  const { data: profiles, error } = await query;
   if (error) {
-    console.error('Error fetching warga:', error)
+    console.error('Error fetching warga:', error);
     return (
       <tr>
         <td colSpan={5} className="py-8 text-center text-red-500">
           Gagal memuat data.
         </td>
       </tr>
-    )
+    );
   }
 
   return (
@@ -57,5 +57,5 @@ export default async function VerificationTable({
         </tr>
       )}
     </>
-  )
+  );
 }

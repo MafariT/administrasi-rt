@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import { NikCheckForm, SuratRequestForm } from '@/components/SuratForm'
-import { useState } from 'react'
+import { NikCheckForm, SuratRequestForm } from '@/components/SuratForm';
+import { useState } from 'react';
 
 export default function SuratPage() {
-  const [verifiedWarga, setVerifiedWarga] = useState<any | null>(null)
+  const [verifiedWarga, setVerifiedWarga] = useState<any | null>(null);
 
   return (
     <div className="container mx-auto py-16 px-6">
@@ -29,5 +29,5 @@ export default function SuratPage() {
         )}
       </div>
     </div>
-  )
+  );
 }

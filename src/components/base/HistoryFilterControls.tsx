@@ -1,38 +1,38 @@
-'use client'
+'use client';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useDebouncedCallback } from 'use-debounce'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useDebouncedCallback } from 'use-debounce';
 
 export default function HistoryFilterControls() {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const handleSearch = useDebouncedCallback((term: string) => {
-    const params = new URLSearchParams(searchParams)
-    params.set('page', '1')
+    const params = new URLSearchParams(searchParams);
+    params.set('page', '1');
     if (term) {
-      params.set('search', term)
+      params.set('search', term);
     } else {
-      params.delete('search')
+      params.delete('search');
     }
-    router.replace(`${pathname}?${params.toString()}`)
-  }, 300)
+    router.replace(`${pathname}?${params.toString()}`);
+  }, 300);
 
   const handleFilter = (status: string) => {
-    const params = new URLSearchParams(searchParams)
-    params.set('page', '1')
-    params.set('status', status)
-    router.replace(`${pathname}?${params.toString()}`)
-  }
+    const params = new URLSearchParams(searchParams);
+    params.set('page', '1');
+    params.set('status', status);
+    router.replace(`${pathname}?${params.toString()}`);
+  };
 
-  const currentStatus = searchParams.get('status') || 'all'
+  const currentStatus = searchParams.get('status') || 'all';
 
   const filterOptions = [
     { name: 'Semua', value: 'all' },
     { name: 'Selesai', value: 'selesai' },
     { name: 'Ditolak', value: 'ditolak' },
-  ]
+  ];
 
   return (
     <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
@@ -59,5 +59,5 @@ export default function HistoryFilterControls() {
         ))}
       </div>
     </div>
-  )
+  );
 }

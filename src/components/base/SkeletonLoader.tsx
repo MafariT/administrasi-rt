@@ -1,4 +1,4 @@
-import { Skeleton } from "@/components/ui/skeleton"
+import { Skeleton } from '@/components/ui/skeleton';
 
 export function SkeletonRow() {
   return (
@@ -19,7 +19,7 @@ export function SkeletonRow() {
         </div>
       </td>
     </tr>
-  )
+  );
 }
 
 export function SkeletonStatCard() {
@@ -33,7 +33,7 @@ export function SkeletonStatCard() {
         <Skeleton className="h-12 w-12 rounded-lg" />
       </div>
     </div>
-  )
+  );
 }
 
 export function SkeletonChart() {
@@ -42,7 +42,7 @@ export function SkeletonChart() {
       <Skeleton className="h-6 w-1/3 mb-4" />
       <Skeleton className="h-80 w-full rounded-lg" />
     </div>
-  )
+  );
 }
 
 export function SkeletonActivityItem() {
@@ -57,5 +57,5 @@ export function SkeletonActivityItem() {
         <Skeleton className="h-10" />
       </div>
     </div>
-  )
+  );
 }

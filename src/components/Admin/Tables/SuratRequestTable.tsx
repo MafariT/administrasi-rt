@@ -1,34 +1,34 @@
-import { createClient } from '@/lib/supabase/server'
-import { format } from 'date-fns'
-import { id } from 'date-fns/locale'
-import { SuratRequest, TableProps } from '@/lib/types'
-import AdminSuratActions from '../AdminSuratActions'
+import { createClient } from '@/lib/supabase/server';
+import { format } from 'date-fns';
+import { id } from 'date-fns/locale';
+import { SuratRequest, TableProps } from '@/lib/types';
+import AdminSuratActions from '../AdminSuratActions';
 
 export default async function SuratRequestTable({
   searchQuery,
   currentPage,
   itemsPerPage,
 }: TableProps) {
-  const supabase = createClient()
+  const supabase = createClient();
 
-  const from = (currentPage - 1) * itemsPerPage
-  const to = from + itemsPerPage - 1
+  const from = (currentPage - 1) * itemsPerPage;
+  const to = from + itemsPerPage - 1;
 
   let query = supabase
     .from('surat_requests')
     .select(
-      `id, letter_type, created_at, form_data, warga:warga_id (full_name, nik)`,
+      `id, letter_type, created_at, form_data, warga:warga_id (full_name, nik)`
     )
     .eq('status', 'pending')
     .order('created_at', { ascending: true })
-    .range(from, to)
+    .range(from, to);
 
   if (searchQuery) {
-    query = query.ilike('letter_type', `%${searchQuery}%`)
+    query = query.ilike('letter_type', `%${searchQuery}%`);
   }
 
-  const { data, error } = await query
-  const requests = data as SuratRequest[] | null
+  const { data, error } = await query;
+  const requests = data as SuratRequest[] | null;
 
   if (error) {
     return (
@@ -37,7 +37,7 @@ export default async function SuratRequestTable({
           Gagal memuat data.
         </td>
       </tr>
-    )
+    );
   }
 
   return (
@@ -72,5 +72,5 @@ export default async function SuratRequestTable({
         </tr>
       )}
     </>
-  )
+  );
 }

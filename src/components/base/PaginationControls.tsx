@@ -1,36 +1,36 @@
-'use client'
+'use client';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { Button } from '@/components/ui/button'
-import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 
 interface PaginationControlsProps {
-  totalCount: number
-  itemsPerPage: number
+  totalCount: number;
+  itemsPerPage: number;
 }
 
 export default function PaginationControls({
   totalCount,
   itemsPerPage,
 }: PaginationControlsProps) {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-  const currentPage = Number(searchParams.get('page')) || 1
-  const totalPages = Math.ceil(totalCount / itemsPerPage)
+  const currentPage = Number(searchParams.get('page')) || 1;
+  const totalPages = Math.ceil(totalCount / itemsPerPage);
 
   const createPageURL = (pageNumber: number) => {
-    const params = new URLSearchParams(searchParams)
-    params.set('page', pageNumber.toString())
-    return `${pathname}?${params.toString()}`
-  }
+    const params = new URLSearchParams(searchParams);
+    params.set('page', pageNumber.toString());
+    return `${pathname}?${params.toString()}`;
+  };
 
-  const hasPrevPage = currentPage > 1
-  const hasNextPage = currentPage < totalPages
+  const hasPrevPage = currentPage > 1;
+  const hasNextPage = currentPage < totalPages;
 
   if (totalPages <= 1) {
-    return null
+    return null;
   }
 
   return (
@@ -67,5 +67,5 @@ export default function PaginationControls({
         </Button>
       </div>
     </div>
-  )
+  );
 }

@@ -1,42 +1,42 @@
-'use client'
+'use client';
 
-import { useTransition } from 'react'
-import { verifyNik, submitSuratRequest } from '@/app/(public)/surat/actions'
-import { toast } from 'sonner'
-import { Button } from './ui/button'
-import { Input } from './ui/input'
-import { Label } from './ui/label'
-import { Textarea } from './ui/textarea'
+import { useTransition } from 'react';
+import { verifyNik, submitSuratRequest } from '@/app/(public)/surat/actions';
+import { toast } from 'sonner';
+import { Button } from './ui/button';
+import { Input } from './ui/input';
+import { Label } from './ui/label';
+import { Textarea } from './ui/textarea';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from './ui/select'
+} from './ui/select';
 
 export function NikCheckForm({
   onNikVerified,
 }: {
-  onNikVerified: (data: any) => void
+  onNikVerified: (data: any) => void;
 }) {
-  const [isPending, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition();
 
   const handleNikCheck = async (formData: FormData) => {
-    const nik = formData.get('nik') as string
+    const nik = formData.get('nik') as string;
 
     startTransition(() => {
       toast.promise(verifyNik(nik), {
         loading: 'Memeriksa NIK...',
         success: (result) => {
-          if (!result.success) throw new Error(result.message)
-          onNikVerified(result.data)
-          return result.message
+          if (!result.success) throw new Error(result.message);
+          onNikVerified(result.data);
+          return result.message;
         },
         error: (error) => error.message,
-      })
-    })
-  }
+      });
+    });
+  };
 
   return (
     <form action={handleNikCheck} className="space-y-4 max-w-md mx-auto">
@@ -55,28 +55,28 @@ export function NikCheckForm({
         {isPending ? 'Memeriksa...' : 'Cek NIK'}
       </Button>
     </form>
-  )
+  );
 }
 
 export function SuratRequestForm({
   warga,
 }: {
-  warga: { id: number; full_name: string | null }
+  warga: { id: number; full_name: string | null };
 }) {
-  const [isPending, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition();
 
   const handleSubmit = async (formData: FormData) => {
     startTransition(() => {
       toast.promise(submitSuratRequest(formData), {
         loading: 'Mengirim pengajuan...',
         success: (result) => {
-          if (!result.success) throw new Error(result.message)
-          return result.message
+          if (!result.success) throw new Error(result.message);
+          return result.message;
         },
         error: (error) => error.message,
-      })
-    })
-  }
+      });
+    });
+  };
 
   return (
     <form action={handleSubmit} className="space-y-6">
@@ -121,5 +121,5 @@ export function SuratRequestForm({
         {isPending ? 'Mengirim...' : 'Ajukan Surat'}
       </Button>
     </form>
-  )
+  );
 }

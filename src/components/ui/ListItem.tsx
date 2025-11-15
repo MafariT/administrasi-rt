@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import * as React from 'react'
-import Link from 'next/link'
-import { cn } from '@/lib/utils'
+import * as React from 'react';
+import Link from 'next/link';
+import { cn } from '@/lib/utils';
 
 const ListItem = React.forwardRef<
   React.ElementRef<'a'>,
@@ -14,7 +14,7 @@ const ListItem = React.forwardRef<
         href={href || '#'}
         ref={ref as React.Ref<HTMLAnchorElement>}
         className={cn(
-          "block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
+          'block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground',
           className
         )}
         {...props}
@@ -25,8 +25,8 @@ const ListItem = React.forwardRef<
         </p>
       </Link>
     </li>
-  )
-})
-ListItem.displayName = "ListItem"
+  );
+});
+ListItem.displayName = 'ListItem';
 
 export default ListItem;

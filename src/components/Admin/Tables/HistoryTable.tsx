@@ -1,7 +1,7 @@
-import { createClient } from '@/lib/supabase/server'
-import { Badge } from '@/components/ui/badge'
-import AdminHistoryActions from '../AdminHistoryActions'
-import { SuratHistoryRequest, TableProps } from '@/lib/types'
+import { createClient } from '@/lib/supabase/server';
+import { Badge } from '@/components/ui/badge';
+import AdminHistoryActions from '../AdminHistoryActions';
+import { SuratHistoryRequest, TableProps } from '@/lib/types';
 
 export default async function HistoryTable({
   statusFilter,
@@ -9,25 +9,25 @@ export default async function HistoryTable({
   currentPage,
   itemsPerPage,
 }: TableProps) {
-  const supabase = createClient()
+  const supabase = createClient();
 
-  const from = (currentPage - 1) * itemsPerPage
-  const to = from + itemsPerPage - 1
+  const from = (currentPage - 1) * itemsPerPage;
+  const to = from + itemsPerPage - 1;
 
   let query = supabase
     .from('surat_requests')
     .select(
-      `id, letter_type, status, unique_number, file_url, warga:warga_id(full_name)`,
+      `id, letter_type, status, unique_number, file_url, warga:warga_id(full_name)`
     )
     .neq('status', 'pending')
     .order('created_at', { ascending: false })
-    .range(from, to)
+    .range(from, to);
 
-  if (statusFilter !== 'all') query = query.eq('status', statusFilter)
-  if (searchQuery) query = query.ilike('unique_number', `%${searchQuery}%`)
+  if (statusFilter !== 'all') query = query.eq('status', statusFilter);
+  if (searchQuery) query = query.ilike('unique_number', `%${searchQuery}%`);
 
-  const { data, error } = await query
-  const requests = data as SuratHistoryRequest[] | null
+  const { data, error } = await query;
+  const requests = data as SuratHistoryRequest[] | null;
   if (error) {
     return (
       <tr>
@@ -35,7 +35,7 @@ export default async function HistoryTable({
           Gagal memuat data.
         </td>
       </tr>
-    )
+    );
   }
   return (
     <>
@@ -78,5 +78,5 @@ export default async function HistoryTable({
         </tr>
       )}
     </>
-  )
+  );
 }

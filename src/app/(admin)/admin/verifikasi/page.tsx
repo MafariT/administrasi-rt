@@ -1,32 +1,35 @@
-import { Suspense } from 'react'
-import { createClient } from '@/lib/supabase/server'
-import { cookies } from 'next/headers'
-import SearchControls from '@/components/base/SearchControls'
-import PaginationControls from '@/components/base/PaginationControls'
-import { SkeletonRow } from '@/components/base/SkeletonLoader'
-import VerificationTable from '@/components/Admin/Tables/VerificationTable'
+import { Suspense } from 'react';
+import { createClient } from '@/lib/supabase/server';
+import { cookies } from 'next/headers';
+import SearchControls from '@/components/base/SearchControls';
+import PaginationControls from '@/components/base/PaginationControls';
+import { SkeletonRow } from '@/components/base/SkeletonLoader';
+import VerificationTable from '@/components/Admin/Tables/VerificationTable';
 
-export const dynamic = 'force-dynamic'
-const ITEMS_PER_PAGE = 10
+export const dynamic = 'force-dynamic';
+const ITEMS_PER_PAGE = 10;
 
 export default async function AdminVerificationPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ search?: string; page?: string }>
+  searchParams?: Promise<{
+    search?: string;
+    page?: string;
+  }>;
 }) {
-  const params = await searchParams
-  const searchQuery = params?.search || ''
-  const currentPage = Number(params?.page) || 1
+  const params = await searchParams;
+  const searchQuery = params?.search || '';
+  const currentPage = Number(params?.page) || 1;
 
-  const cookieStore = cookies()
-  const supabase = createClient()
+  const cookieStore = cookies();
+  const supabase = createClient();
   let countQuery = supabase
     .from('warga')
     .select('id', { count: 'exact', head: true })
-    .eq('status', 'pending_verification')
+    .eq('status', 'pending_verification');
   if (searchQuery)
-    countQuery = countQuery.ilike('full_name', `%${searchQuery}%`)
-  const { count } = await countQuery
+    countQuery = countQuery.ilike('full_name', `%${searchQuery}%`);
+  const { count } = await countQuery;
 
   return (
     <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-lg">
@@ -75,5 +78,5 @@ export default async function AdminVerificationPage({
         itemsPerPage={ITEMS_PER_PAGE}
       />
     </div>
-  )
+  );
 }

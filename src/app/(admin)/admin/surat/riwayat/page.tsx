@@ -1,32 +1,37 @@
-import { Suspense } from 'react'
-import { createClient } from '@/lib/supabase/server'
-import HistoryFilterControls from '@/components/base/HistoryFilterControls'
-import PaginationControls from '@/components/base/PaginationControls'
-import { SkeletonRow } from '@/components/base/SkeletonLoader'
-import HistoryTable from '@/components/Admin/Tables/HistoryTable'
+import { Suspense } from 'react';
+import { createClient } from '@/lib/supabase/server';
+import HistoryFilterControls from '@/components/base/HistoryFilterControls';
+import PaginationControls from '@/components/base/PaginationControls';
+import { SkeletonRow } from '@/components/base/SkeletonLoader';
+import HistoryTable from '@/components/Admin/Tables/HistoryTable';
 
-export const dynamic = 'force-dynamic'
-const ITEMS_PER_PAGE = 10
+export const dynamic = 'force-dynamic';
+const ITEMS_PER_PAGE = 10;
 
 export default async function SuratHistoryPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ status?: string; search?: string; page?: string }>
+  searchParams?: Promise<{
+    status?: string;
+    search?: string;
+    page?: string;
+  }>;
 }) {
-  const params = await searchParams
-  const statusFilter = params?.status || 'all'
-  const searchQuery = params?.search || ''
-  const currentPage = Number(params?.page) || 1
+  const params = await searchParams;
+  const statusFilter = params?.status || 'all';
+  const searchQuery = params?.search || '';
+  const currentPage = Number(params?.page) || 1;
 
-  const supabase = createClient()
+  const supabase = createClient();
   let countQuery = supabase
     .from('surat_requests')
     .select('id', { count: 'exact', head: true })
-    .neq('status', 'pending')
-  if (statusFilter !== 'all') countQuery = countQuery.eq('status', statusFilter)
+    .neq('status', 'pending');
+  if (statusFilter !== 'all')
+    countQuery = countQuery.eq('status', statusFilter);
   if (searchQuery)
-    countQuery = countQuery.ilike('letter_type', `%${searchQuery}%`)
-  const { count } = await countQuery
+    countQuery = countQuery.ilike('letter_type', `%${searchQuery}%`);
+  const { count } = await countQuery;
 
   return (
     <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-lg">
@@ -71,5 +76,5 @@ export default async function SuratHistoryPage({
         itemsPerPage={ITEMS_PER_PAGE}
       />
     </div>
-  )
+  );
 }

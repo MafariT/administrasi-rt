@@ -1,7 +1,7 @@
-import { createClient } from '@/lib/supabase/server'
-import { Badge } from '@/components/ui/badge'
-import AdminWargaActions from '../AdminWargaActions'
-import { TableProps } from '@/lib/types'
+import { createClient } from '@/lib/supabase/server';
+import { Badge } from '@/components/ui/badge';
+import AdminWargaActions from '../AdminWargaActions';
+import { TableProps } from '@/lib/types';
 
 export default async function UserManagementTable({
   statusFilter,
@@ -9,21 +9,21 @@ export default async function UserManagementTable({
   currentPage,
   itemsPerPage,
 }: TableProps) {
-  const supabase = createClient()
+  const supabase = createClient();
 
-  const from = (currentPage - 1) * itemsPerPage
-  const to = from + itemsPerPage - 1
+  const from = (currentPage - 1) * itemsPerPage;
+  const to = from + itemsPerPage - 1;
 
   let query = supabase
     .from('warga')
     .select('id, full_name, nik, status, phone_number, nomor_kk')
     .order('created_at', { ascending: false })
-    .range(from, to)
+    .range(from, to);
 
-  if (statusFilter !== 'all') query = query.eq('status', statusFilter)
-  if (searchQuery) query = query.ilike('full_name', `%${searchQuery}%`)
+  if (statusFilter !== 'all') query = query.eq('status', statusFilter);
+  if (searchQuery) query = query.ilike('full_name', `%${searchQuery}%`);
 
-  const { data: wargaList, error } = await query
+  const { data: wargaList, error } = await query;
 
   if (error) {
     return (
@@ -32,7 +32,7 @@ export default async function UserManagementTable({
           Gagal memuat data.
         </td>
       </tr>
-    )
+    );
   }
 
   return (
@@ -76,5 +76,5 @@ export default async function UserManagementTable({
         </tr>
       )}
     </>
-  )
+  );
 }

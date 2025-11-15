@@ -1,4 +1,4 @@
-import DaftarForm from '@/components/DaftarForm'
+import DaftarForm from '@/components/DaftarForm';
 
 export default function DaftarPage() {
   return (
@@ -9,11 +9,12 @@ export default function DaftarPage() {
             Pendaftaran Warga Baru
           </h1>
           <p className="mt-2 text-gray-600">
-            Daftarkan diri Anda untuk dapat menggunakan layanan surat pengantar online.
+            Daftarkan diri Anda untuk dapat menggunakan layanan surat pengantar
+            online.
           </p>
         </div>
         <DaftarForm />
       </div>
     </div>
-  )
+  );
 }

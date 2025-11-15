@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import { Bars3Icon } from '@heroicons/react/24/outline'
-import { useSession } from '@/hooks/useSession'
-import LogoutButton from '../LogoutButton'
-import AdminProfileModal from './AdminProfileModal'
+import { useState } from 'react';
+import { Bars3Icon } from '@heroicons/react/24/outline';
+import { useSession } from '@/hooks/useSession';
+import LogoutButton from '../LogoutButton';
+import AdminProfileModal from './AdminProfileModal';
 
 import {
   DropdownMenu,
@@ -13,17 +13,17 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
-import { ChevronDownIcon } from '@heroicons/react/24/solid'
+} from '@/components/ui/dropdown-menu';
+import { Button } from '@/components/ui/button';
+import { ChevronDownIcon } from '@heroicons/react/24/solid';
 
 interface AdminHeaderProps {
-  toggleSidebar: () => void
+  toggleSidebar: () => void;
 }
 
 export default function AdminHeader({ toggleSidebar }: AdminHeaderProps) {
-  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false)
-  const { user, profile } = useSession()
+  const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
+  const { user, profile } = useSession();
 
   return (
     <>
@@ -77,8 +77,15 @@ export default function AdminHeader({ toggleSidebar }: AdminHeaderProps) {
       <AdminProfileModal
         isOpen={isProfileModalOpen}
         onClose={() => setIsProfileModalOpen(false)}
-        user={profile ? { id: profile.id, full_name: profile.full_name } : null}
+        user={
+          profile
+            ? {
+                id: profile.id,
+                full_name: profile.full_name,
+              }
+            : null
+        }
       />
     </>
-  )
+  );
 }

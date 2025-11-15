@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import Link from 'next/link'
-import Image from 'next/image'
-import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import { FaFacebook, FaWhatsapp } from 'react-icons/fa'
+import { useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
+import { FaFacebook, FaWhatsapp } from 'react-icons/fa';
 
 import {
   NavigationMenu,
@@ -13,11 +13,11 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from '@/components/ui/navigation-menu'
-import ListItem from '@/components/ui/ListItem'
+} from '@/components/ui/navigation-menu';
+import ListItem from '@/components/ui/ListItem';
 
 export default function Navbar() {
-  const [isExpanded, setIsExpanded] = useState(false)
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const layananComponents = [
     {
@@ -28,14 +28,14 @@ export default function Navbar() {
       title: 'Ajukan Surat Pengantar',
       href: '/surat',
     },
-  ]
+  ];
 
   const mobileNavLinks = [
     { name: 'Beranda', href: '/' },
     { name: 'Daftar Sebagai Warga', href: '/daftar' },
     { name: 'Ajukan Surat Pengantar', href: '/surat' },
     { name: 'Pusat Bantuan', href: '/bantuan' },
-  ]
+  ];
 
   return (
     <header className="bg-primary text-white shadow-md sticky top-0 z-50 relative">
@@ -129,7 +129,9 @@ export default function Navbar() {
           aria-hidden={!isExpanded}
           className={`md:hidden absolute left-0 right-0 top-full bg-primary transition-all duration-300 ease-in-out overflow-hidden
           ${isExpanded ? 'translate-y-0 opacity-100 pointer-events-auto' : '-translate-y-2 opacity-0 pointer-events-none'}`}
-          style={{ boxShadow: '0 10px 30px rgba(0,0,0,0.15)' }}
+          style={{
+            boxShadow: '0 10px 30px rgba(0,0,0,0.15)',
+          }}
         >
           <nav className="flex flex-col space-y-2 px-4 py-4">
             {mobileNavLinks.map((link) => (
@@ -165,5 +167,5 @@ export default function Navbar() {
         </div>
       </div>
     </header>
-  )
+  );
 }

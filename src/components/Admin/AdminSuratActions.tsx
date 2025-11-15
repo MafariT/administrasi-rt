@@ -1,42 +1,42 @@
-'use client'
+'use client';
 
-import { useState, useTransition } from 'react'
+import { useState, useTransition } from 'react';
 import {
   approveSuratRequest,
   rejectSuratRequest,
-} from '@/app/(admin)/admin/surat/actions'
-import { toast } from 'sonner'
+} from '@/app/(admin)/admin/surat/actions';
+import { toast } from 'sonner';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { SuratRequest } from '@/lib/types'
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { SuratRequest } from '@/lib/types';
 
 export default function SuratActions({ request }: { request: SuratRequest }) {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isPending, startTransition] = useTransition()
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const handleAction = (action: 'approve' | 'reject') => {
     startTransition(() => {
       const actionPromise =
         action === 'approve'
           ? approveSuratRequest(request.id.toString())
-          : rejectSuratRequest(request.id.toString())
+          : rejectSuratRequest(request.id.toString());
 
       toast.promise(actionPromise, {
         loading: 'Memproses permintaan...',
         success: (result) => {
-          if (!result.success) throw new Error(result.message)
-          return result.message
+          if (!result.success) throw new Error(result.message);
+          return result.message;
         },
         error: (error) => error.message,
-      })
-    })
-  }
+      });
+    });
+  };
 
   return (
     <>
@@ -68,7 +68,7 @@ export default function SuratActions({ request }: { request: SuratRequest }) {
         onClose={() => setIsModalOpen(false)}
       />
     </>
-  )
+  );
 }
 
 function SuratDetailModal({
@@ -76,9 +76,9 @@ function SuratDetailModal({
   isOpen,
   onClose,
 }: {
-  request: SuratRequest
-  isOpen: boolean
-  onClose: () => void
+  request: SuratRequest;
+  isOpen: boolean;
+  onClose: () => void;
 }) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -111,5 +111,5 @@ function SuratDetailModal({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
