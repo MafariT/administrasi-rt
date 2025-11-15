@@ -26,14 +26,14 @@ export function generateSuratKeteranganPDF(data: SuratData): Promise<Buffer> {
 
     // Header
     doc.image('public/img/logo-pdf.png', 72, 50, {
-      width: 40,
+      width: 60,
     });
     doc.y = 60;
     doc
       .font('Helvetica-Bold')
-      .fontSize(14)
+      .fontSize(18)
       .text('RUKUN TETANGGA 12', { align: 'center' });
-    doc.fontSize(12).text('PEMERINTAH DESA MENDALO INDAH', {
+    doc.fontSize(16).text('PEMERINTAH DESA MENDALO INDAH', {
       align: 'center',
     });
     doc.text('KECAMATAN JAMBI LUAR KOTA', {
@@ -48,20 +48,17 @@ export function generateSuratKeteranganPDF(data: SuratData): Promise<Buffer> {
       .moveTo(72, doc.y)
       .lineTo(523, doc.y)
       .stroke();
-    doc.moveDown(2);
+    doc.moveDown(1);
 
     // Title
-    doc
-      .font('Helvetica-Bold')
-      .fontSize(12)
-      .text(data.letterType.toUpperCase(), {
-        align: 'center',
-        underline: true,
-      });
+    doc.font('Helvetica-Bold').fontSize(12).text('SURAT KETERANGAN', {
+      align: 'center',
+      underline: true,
+    });
     doc.font('Helvetica').fontSize(11).text(`Nomor: ${data.uniqueNumber}`, {
       align: 'center',
     });
-    doc.moveDown(2);
+    doc.moveDown(1);
 
     doc.text(
       'Ketua Rukun Tetangga (RT) 12 Pemerintah Desa Mendalo Indah Kecamatan Jambi Luar Kota Kabupaten Muaro Jambi dengan ini menerangkan bahwa:',
@@ -115,7 +112,7 @@ export function generateSuratKeteranganPDF(data: SuratData): Promise<Buffer> {
       { lineGap: 5 }
     );
     doc.moveDown(1);
-    doc.font('Helvetica-Bold').text(data.keperluan, {
+    doc.font('Helvetica-Bold').text(data.letterType, {
       indent: 36,
       underline: true,
     });
@@ -137,8 +134,8 @@ export function generateSuratKeteranganPDF(data: SuratData): Promise<Buffer> {
       signatureX
     );
     doc.text('Ketua RT. 12', signatureX);
-    doc.moveDown(4); // Space for signature
-    doc.font('Helvetica-Bold').text('PERIANTO', signatureX, doc.y, {
+    doc.moveDown(6);
+    doc.font('Helvetica-Bold').text('PAK RT', signatureX, doc.y, {
       underline: true,
     });
 

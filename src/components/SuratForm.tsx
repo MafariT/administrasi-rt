@@ -1,7 +1,7 @@
 'use client';
 
-import { useTransition } from 'react';
-import { verifyNik, submitSuratRequest } from '@/app/(public)/surat/actions';
+import { useState, useTransition } from 'react';
+import { submitSuratRequest, verifyNik } from '@/app/(public)/surat/actions';
 import { toast } from 'sonner';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
@@ -14,6 +14,22 @@ import {
   SelectTrigger,
   SelectValue,
 } from './ui/select';
+import { Spinner } from './ui/spinner';
+
+export const LETTER_TYPES = [
+  'Kartu Keluarga (KK)',
+  'Kartu Tanda Penduduk (KTP)',
+  'Surat Keterangan Bersih Diri Catatan Kepolisian (SKBD/SKCK)',
+  'Surat Keterangan Domisili',
+  'Surat Keterangan Pindah',
+  'Surat Keterangan Nikah',
+  'Surat Keterangan Meninggal',
+  'Surat Keterangan Usaha',
+  'Surat Keterangan Kelahiran',
+  'Surat Keterangan Tidak Mampu',
+  'Surat Keterangan Kehilangan',
+  'Lainnya...',
+];
 
 export function NikCheckForm({
   onNikVerified,
@@ -52,7 +68,7 @@ export function NikCheckForm({
         />
       </div>
       <Button type="submit" disabled={isPending} className="w-full">
-        {isPending ? 'Memeriksa...' : 'Cek NIK'}
+        {isPending ? <Spinner /> : 'Cek NIK'}
       </Button>
     </form>
   );
@@ -64,8 +80,12 @@ export function SuratRequestForm({
   warga: { id: number; full_name: string | null };
 }) {
   const [isPending, startTransition] = useTransition();
-
+  const [selectedLetterType, setSelectedLetterType] = useState('');
   const handleSubmit = async (formData: FormData) => {
+    if (formData.get('letter_type') === 'Lainnya...') {
+      formData.set('letter_type', formData.get('custom_letter_type') || '');
+    }
+
     startTransition(() => {
       toast.promise(submitSuratRequest(formData), {
         loading: 'Mengirim pengajuan...',
@@ -89,26 +109,38 @@ export function SuratRequestForm({
 
       <div className="space-y-2">
         <Label htmlFor="letter_type">Jenis Surat yang Diperlukan</Label>
-        <Select name="letter_type" required>
-          <SelectTrigger id="letter_type">
+        <Select
+          name="letter_type"
+          required
+          onValueChange={setSelectedLetterType}
+        >
+          <SelectTrigger id="letter_type" className="w-full">
             <SelectValue placeholder="Pilih jenis surat..." />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Surat Pengantar Domisili">
-              Surat Pengantar Domisili
-            </SelectItem>
-            <SelectItem value="Surat Keterangan Usaha">
-              Surat Keterangan Usaha
-            </SelectItem>
-            <SelectItem value="Surat Pengantar Lainnya">
-              Surat Pengantar Lainnya
-            </SelectItem>
+            {LETTER_TYPES.map((type) => (
+              <SelectItem key={type} value={type}>
+                {type}
+              </SelectItem>
+            ))}
           </SelectContent>
         </Select>
       </div>
 
+      {selectedLetterType === 'Lainnya...' && (
+        <div className="space-y-2 animate-in fade-in duration-300">
+          <Label htmlFor="custom_letter_type">Sebutkan Keperluan Lainnya</Label>
+          <Textarea
+            id="custom_letter_type"
+            name="custom_letter_type"
+            required
+            placeholder="Contoh: Surat Keterangan..."
+          />
+        </div>
+      )}
+
       <div className="space-y-2">
-        <Label htmlFor="keperluan">Jelaskan Keperluan Anda</Label>
+        <Label htmlFor="keperluan">Tujuan Penggunaan Surat</Label>
         <Textarea
           id="keperluan"
           name="keperluan"
@@ -118,7 +150,7 @@ export function SuratRequestForm({
       </div>
 
       <Button type="submit" disabled={isPending} className="w-full">
-        {isPending ? 'Mengirim...' : 'Ajukan Surat'}
+        {isPending ? <Spinner /> : 'Ajukan Surat'}
       </Button>
     </form>
   );
