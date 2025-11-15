@@ -16,6 +16,11 @@ export type WargaProfile = {
   nomor_kk: string | null
   phone_number: string | null
   status: string
+  tempat_lahir?: string | null
+  tanggal_lahir?: Date | null
+  jenis_kelamin?: string | null
+  pekerjaan?: string | null
+  alamat_ktp?: string | null
 }
 
 export interface ModalProps {
@@ -47,11 +52,34 @@ export type Profile = {
 }
 
 export type SuratRequest = {
-  length: number
   id: number
   letter_type: string
-  form_data: { keperluan?: string }
-  warga: { full_name: string | null; nik: string | null }
+  created_at: string
+  form_data: { [key: string]: any }
+  warga: {
+    full_name: string | null
+    nik: string | null
+  } | null
+}
+
+export type SuratHistoryRequest = {
+  id: number
+  letter_type: string
+  created_at: string
+  unique_number: string
+  status: string
+  file_url: string
+  form_data: { [key: string]: any }
+  warga: {
+    full_name: string | null
+  } | null
+}
+
+export interface TableProps {
+  statusFilter?: string
+  searchQuery: string
+  currentPage: number
+  itemsPerPage: number
 }
 
 // ==========================================================

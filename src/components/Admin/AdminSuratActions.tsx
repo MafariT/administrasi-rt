@@ -89,11 +89,11 @@ function SuratDetailModal({
         <div className="py-4 space-y-4">
           <div>
             <p className="text-sm text-gray-500">Nama Pemohon</p>
-            <p className="font-semibold">{request.warga.full_name}</p>
+            <p className="font-semibold">{request.warga?.full_name}</p>
           </div>
           <div>
             <p className="text-sm text-gray-500">NIK</p>
-            <p className="font-mono">{request.warga.nik}</p>
+            <p className="font-mono">{request.warga?.nik}</p>
           </div>
           <div>
             <p className="text-sm text-gray-500">Jenis Surat</p>

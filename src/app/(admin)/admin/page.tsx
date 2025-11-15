@@ -1,6 +1,14 @@
-import { Suspense } from 'react';
-import { SkeletonStatCard, SkeletonChart, SkeletonActivityItem } from '@/components/base/SkeletonLoader';
-import { RecentActivity, RegistrationChart, StatCards } from '@/lib/helper/AdminHelper';
+import { Suspense } from 'react'
+import {
+  SkeletonStatCard,
+  SkeletonChart,
+  SkeletonActivityItem,
+} from '@/components/base/SkeletonLoader'
+import {
+  RecentActivity,
+  RegistrationChart,
+  StatCards,
+} from '@/lib/helper/AdminHelper'
 
 export default function AdminOverviewPage() {
   return (
@@ -11,24 +19,22 @@ export default function AdminOverviewPage() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Suspense fallback={
-          <>
-            <SkeletonStatCard />
-            <SkeletonStatCard />
-            <SkeletonStatCard />
-          </>
-        }>
+        <Suspense
+          fallback={
+            <>
+              <SkeletonStatCard />
+              <SkeletonStatCard />
+              <SkeletonStatCard />
+            </>
+          }
+        >
           <StatCards />
         </Suspense>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-
         <div className="lg:col-span-2">
-
-          <Suspense fallback={
-            <SkeletonActivityItem />
-          }>
+          <Suspense fallback={<SkeletonActivityItem />}>
             <RecentActivity />
           </Suspense>
         </div>
@@ -40,5 +46,5 @@ export default function AdminOverviewPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }
