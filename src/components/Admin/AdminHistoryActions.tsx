@@ -4,8 +4,8 @@ import { getSuratDownloadUrl } from '@/app/(admin)/admin/surat/actions';
 import { toast } from 'sonner';
 
 interface HistoryActionsProps {
-  status: string;
-  filePath: string | null;
+  status?: string;
+  filePath?: string | null;
 }
 
 export default function HistoryActions({

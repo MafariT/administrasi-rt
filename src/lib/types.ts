@@ -60,6 +60,8 @@ export type SuratRequest = {
     full_name: string | null;
     nik: string | null;
   } | null;
+  status?: string;
+  file_url?: string | null;
 };
 
 export type SuratHistoryRequest = {
