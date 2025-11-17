@@ -1,35 +1,35 @@
-'use client'
+'use client';
 
-import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useDebouncedCallback } from 'use-debounce'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useDebouncedCallback } from 'use-debounce';
 
 export default function FilterControls() {
-  const router = useRouter()
-  const pathname = usePathname()
-  const searchParams = useSearchParams()
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
   const handleSearch = useDebouncedCallback((term: string) => {
-    const params = new URLSearchParams(searchParams)
-    if (term) params.set('search', term)
-    else params.delete('search')
-    router.replace(`${pathname}?${params.toString()}`)
-  }, 300)
+    const params = new URLSearchParams(searchParams);
+    if (term) params.set('search', term);
+    else params.delete('search');
+    router.replace(`${pathname}?${params.toString()}`);
+  }, 300);
 
   const handleFilter = (status: string) => {
-    const params = new URLSearchParams(searchParams)
-    params.set('status', status)
-    router.replace(`${pathname}?${params.toString()}`)
-  }
+    const params = new URLSearchParams(searchParams);
+    params.set('status', status);
+    router.replace(`${pathname}?${params.toString()}`);
+  };
 
-  const currentStatus = searchParams.get('status') || 'all'
-  const currentSearch = searchParams.get('search') ?? ''
+  const currentStatus = searchParams.get('status') || 'all';
+  const currentSearch = searchParams.get('search') ?? '';
 
   const filterOptions = [
     { name: 'Semua', value: 'all' },
     { name: 'Terdaftar', value: 'terdaftar' },
     { name: 'Pending', value: 'pending_verification' },
     { name: 'Ditolak', value: 'ditolak' },
-  ]
+  ];
 
   return (
     <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
@@ -42,7 +42,7 @@ export default function FilterControls() {
       />
 
       <div className="flex items-center space-x-2 p-1 bg-gray-100 rounded-lg">
-        {filterOptions.map(opt => (
+        {filterOptions.map((opt) => (
           <button
             key={opt.value}
             onClick={() => handleFilter(opt.value)}
@@ -57,5 +57,5 @@ export default function FilterControls() {
         ))}
       </div>
     </div>
-  )
+  );
 }

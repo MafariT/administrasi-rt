@@ -1,30 +1,30 @@
-'use client'
+'use client';
 
-import { toast } from 'sonner'
-import { useFormStatus } from 'react-dom'
+import { toast } from 'sonner';
+import { useFormStatus } from 'react-dom';
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from '@/components/ui/dialog'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   updateAdminPassword,
   updateAdminProfile,
-} from '@/app/(admin)/admin/profile/action'
-import { Spinner } from '../ui/spinner'
+} from '@/app/(admin)/admin/profile/action';
+import { Spinner } from '../ui/spinner';
 
 function SubmitButton({ children }: { children: React.ReactNode }) {
-  const { pending } = useFormStatus()
+  const { pending } = useFormStatus();
   return (
     <Button type="submit" disabled={pending}>
       {pending ? <Spinner /> : children}
     </Button>
-  )
+  );
 }
 
 export default function AdminProfileModal({
@@ -32,32 +32,32 @@ export default function AdminProfileModal({
   onClose,
   user,
 }: {
-  isOpen: boolean
-  onClose: () => void
-  user: { id: string; full_name: string | null } | null
+  isOpen: boolean;
+  onClose: () => void;
+  user: { id: string; full_name: string | null } | null;
 }) {
   const handleProfileUpdate = async (formData: FormData) => {
     toast.promise(updateAdminProfile(formData), {
       loading: 'Memperbarui profil...',
       success: (result) => {
-        if (!result.success) throw new Error(result.message)
-        onClose()
-        return result.message
+        if (!result.success) throw new Error(result.message);
+        onClose();
+        return result.message;
       },
       error: (error) => error.message,
-    })
-  }
+    });
+  };
 
   const handlePasswordUpdate = async (formData: FormData) => {
     toast.promise(updateAdminPassword(formData), {
       loading: 'Memperbarui password...',
       success: (result) => {
-        if (!result.success) throw new Error(result.message)
-        return result.message
+        if (!result.success) throw new Error(result.message);
+        return result.message;
       },
       error: (error) => error.message,
-    })
-  }
+    });
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -105,5 +105,5 @@ export default function AdminProfileModal({
         </form>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

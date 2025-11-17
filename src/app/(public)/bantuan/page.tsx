@@ -1,8 +1,8 @@
-import { getAllPosts } from '@/lib/mdx'
-import Link from 'next/link'
+import { getAllPosts } from '@/lib/mdx';
+import Link from 'next/link';
 
 export default async function BantuanHubPage() {
-  const posts = await getAllPosts()
+  const posts = await getAllPosts();
 
   return (
     <div className="bg-white p-8 sm:p-12 rounded-2xl border border-gray-200 shadow-lg">
@@ -14,15 +14,17 @@ export default async function BantuanHubPage() {
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         {posts.map((post) => (
-          <Link 
+          <Link
             key={post.slug}
-            href={`/bantuan/${post.slug}`} 
+            href={`/bantuan/${post.slug}`}
             className="block p-6 border border-gray-200 rounded-lg hover:border-primary hover:bg-gray-50 transition-all"
           >
-            <h3 className="text-lg font-semibold text-gray-800">{post.meta.title}</h3>
+            <h3 className="text-lg font-semibold text-gray-800">
+              {post.meta.title}
+            </h3>
           </Link>
         ))}
       </div>
     </div>
-  )
+  );
 }

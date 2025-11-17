@@ -1,19 +1,19 @@
-'use client'
+'use client';
 
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
-} from "@/components/ui/chart"
+} from '@/components/ui/chart';
 
 const chartConfig = {
   pendaftar: {
-    label: "Pendaftar",
-    color: "#0D9488",
+    label: 'Pendaftar',
+    color: '#0D9488',
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
 export function WeeklyChart({ data }: { data: any[] }) {
   return (
@@ -38,12 +38,8 @@ export function WeeklyChart({ data }: { data: any[] }) {
           cursor={false}
           content={<ChartTooltipContent indicator="dot" />}
         />
-        <Bar
-          dataKey="pendaftar"
-          fill="var(--color-pendaftar)"
-          radius={4}
-        />
+        <Bar dataKey="pendaftar" fill="var(--color-pendaftar)" radius={4} />
       </BarChart>
     </ChartContainer>
-  )
+  );
 }

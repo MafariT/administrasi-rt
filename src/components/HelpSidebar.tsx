@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
-import { HelpSidebarProps } from '@/lib/types'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { HelpSidebarProps } from '@/lib/types';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export default function HelpSidebar({ posts }: HelpSidebarProps) {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <aside className="w-full md:w-64 flex-shrink-0 bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-gray-100 shadow-md sticky top-8 h-fit">
@@ -13,7 +13,7 @@ export default function HelpSidebar({ posts }: HelpSidebarProps) {
       <nav>
         <ul className="space-y-1">
           {posts.map((post) => {
-            const isActive = pathname === `/bantuan/${post.slug}`
+            const isActive = pathname === `/bantuan/${post.slug}`;
             return (
               <li key={post.slug}>
                 <Link
@@ -27,10 +27,10 @@ export default function HelpSidebar({ posts }: HelpSidebarProps) {
                   {post.meta.title}
                 </Link>
               </li>
-            )
+            );
           })}
         </ul>
       </nav>
     </aside>
-  )
+  );
 }

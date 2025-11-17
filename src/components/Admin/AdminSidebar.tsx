@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   UserGroupIcon,
   CheckBadgeIcon,
@@ -9,7 +9,7 @@ import {
   EnvelopeIcon,
   XMarkIcon,
   ClockIcon,
-} from '@heroicons/react/24/outline'
+} from '@heroicons/react/24/outline';
 
 const navigationGroups = [
   {
@@ -24,25 +24,37 @@ const navigationGroups = [
         href: '/admin/verifikasi',
         icon: CheckBadgeIcon,
       },
-      { name: 'Semua Warga', href: '/admin/users', icon: UserGroupIcon },
+      {
+        name: 'Semua Warga',
+        href: '/admin/users',
+        icon: UserGroupIcon,
+      },
     ],
   },
   {
     title: 'Manajemen Surat',
     items: [
-      { name: 'Permintaan Baru', href: '/admin/surat', icon: EnvelopeIcon },
-      { name: 'Riwayat Surat', href: '/admin/surat/riwayat', icon: ClockIcon },
+      {
+        name: 'Permintaan Baru',
+        href: '/admin/surat',
+        icon: EnvelopeIcon,
+      },
+      {
+        name: 'Riwayat Surat',
+        href: '/admin/surat/riwayat',
+        icon: ClockIcon,
+      },
     ],
   },
-]
+];
 
 interface AdminSidebarProps {
-  isOpen: boolean
-  setIsOpen: (isOpen: boolean) => void
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
 }
 
 export default function AdminSidebar({ isOpen, setIsOpen }: AdminSidebarProps) {
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <aside
@@ -68,7 +80,7 @@ export default function AdminSidebar({ isOpen, setIsOpen }: AdminSidebarProps) {
             </h3>
             <div className="space-y-1">
               {group.items.map((item) => {
-                const isActive = pathname === item.href
+                const isActive = pathname === item.href;
                 return (
                   <Link
                     key={item.name}
@@ -82,12 +94,12 @@ export default function AdminSidebar({ isOpen, setIsOpen }: AdminSidebarProps) {
                     <item.icon className="h-5 w-5 mr-3" />
                     <span>{item.name}</span>
                   </Link>
-                )
+                );
               })}
             </div>
           </div>
         ))}
       </nav>
     </aside>
-  )
+  );
 }

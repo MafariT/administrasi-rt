@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
-import { getSuratDownloadUrl } from '@/app/(admin)/admin/surat/actions'
-import { toast } from 'sonner'
+import { getSuratDownloadUrl } from '@/app/(admin)/admin/surat/actions';
+import { toast } from 'sonner';
 
 interface HistoryActionsProps {
-  status: string
-  filePath: string | null
+  status?: string;
+  filePath?: string | null;
 }
 
 export default function HistoryActions({
@@ -14,22 +14,22 @@ export default function HistoryActions({
 }: HistoryActionsProps) {
   const handleDownload = async () => {
     if (!filePath) {
-      toast.error('File tidak ditemukan untuk permintaan ini.')
-      return
+      toast.error('File tidak ditemukan untuk permintaan ini.');
+      return;
     }
 
-    const promise = () => getSuratDownloadUrl(filePath)
+    const promise = () => getSuratDownloadUrl(filePath);
 
     toast.promise(promise, {
       loading: 'Membuat link unduhan...',
       success: (result) => {
-        if (!result.success || !result.url) throw new Error(result.message)
-        window.open(result.url, '_blank')
-        return 'Link unduhan berhasil dibuat!'
+        if (!result.success || !result.url) throw new Error(result.message);
+        window.open(result.url, '_blank');
+        return 'Link unduhan berhasil dibuat!';
       },
       error: (error) => error.message,
-    })
-  }
+    });
+  };
 
   return (
     <>
@@ -42,5 +42,5 @@ export default function HistoryActions({
         </button>
       )}
     </>
-  )
+  );
 }

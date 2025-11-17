@@ -1,26 +1,26 @@
-'use client'
+'use client';
 
-import { useState } from 'react'
-import Link from 'next/link'
+import { useState } from 'react';
+import Link from 'next/link';
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet"
-import { Button } from "@/components/ui/button"
-import { Bars3Icon } from '@heroicons/react/24/outline'
+} from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
+import { Bars3Icon } from '@heroicons/react/24/outline';
 
 const navLinks = [
   { name: 'Beranda', href: '/' },
   { name: 'Daftar Sebagai Warga', href: '/daftar' },
   { name: 'Ajukan Surat', href: '/surat' },
   { name: 'Pusat Bantuan', href: '/bantuan' },
-]
+];
 
 export default function MobileNav() {
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(false);
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -31,7 +31,9 @@ export default function MobileNav() {
       </SheetTrigger>
       <SheetContent side="left" className="bg-sidebar p-4">
         <SheetHeader>
-          <SheetTitle className="text-left text-white font-bold">Menu Navigasi</SheetTitle>
+          <SheetTitle className="text-left text-white font-bold">
+            Menu Navigasi
+          </SheetTitle>
         </SheetHeader>
         <nav className="mt-8 flex flex-col space-y-2">
           {navLinks.map((link) => (
@@ -47,5 +49,5 @@ export default function MobileNav() {
         </nav>
       </SheetContent>
     </Sheet>
-  )
+  );
 }

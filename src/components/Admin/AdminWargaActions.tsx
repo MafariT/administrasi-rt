@@ -1,14 +1,14 @@
-'use client'
+'use client';
 
-import { useState, useTransition } from 'react'
-import { deleteWarga } from '@/app/(admin)/admin/users/actions'
-import EditWargaModal from './EditWargaModal'
-import { WargaProfile } from '@/lib/types'
-import { toast } from 'sonner'
+import { useState, useTransition } from 'react';
+import { deleteWarga } from '@/app/(admin)/admin/users/actions';
+import EditWargaModal from './EditWargaModal';
+import { WargaProfile } from '@/lib/types';
+import { toast } from 'sonner';
 
 export default function AdminWargaActions({ warga }: { warga: WargaProfile }) {
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [isPending, startTransition] = useTransition()
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
   const handleDelete = () => {
     if (

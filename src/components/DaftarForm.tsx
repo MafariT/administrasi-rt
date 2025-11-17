@@ -1,13 +1,13 @@
-'use client'
+'use client';
 
-import { useForm } from 'react-hook-form'
-import { z } from 'zod'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { registerWarga } from '@/app/(public)/daftar/actions'
-import { wargaSchema } from '@/lib/validations'
-import { useTransition } from 'react'
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { registerWarga } from '@/app/(public)/daftar/actions';
+import { wargaSchema } from '@/lib/validations';
+import { useTransition } from 'react';
 
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -15,36 +15,36 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select'
-import { Textarea } from '@/components/ui/textarea'
-import { toast } from 'sonner'
-import { Spinner } from './ui/spinner'
+} from '@/components/ui/select';
+import { Textarea } from '@/components/ui/textarea';
+import { toast } from 'sonner';
+import { Spinner } from './ui/spinner';
 
 function FormSection({
   title,
   description,
 }: {
-  title: string
-  description: string
+  title: string;
+  description: string;
 }) {
   return (
     <div className="pt-8 pb-4 border-b border-gray-200">
       <h2 className="text-xl font-semibold text-gray-800">{title}</h2>
       <p className="text-sm text-gray-500 mt-1">{description}</p>
     </div>
-  )
+  );
 }
 
 export default function DaftarForm() {
-  const [isPending, startTransition] = useTransition()
+  const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof wargaSchema>>({
     resolver: zodResolver(wargaSchema),
@@ -65,26 +65,26 @@ export default function DaftarForm() {
       phone_number: '',
       email: '',
     },
-  })
+  });
 
   async function onSubmit(values: z.infer<typeof wargaSchema>) {
     startTransition(async () => {
-      const result = await registerWarga(values)
+      const result = await registerWarga(values);
       if (result.success) {
-        toast.success(result.message)
-        form.reset()
+        toast.success(result.message);
+        form.reset();
       } else {
-        toast.error(result.message)
+        toast.error(result.message);
         if (result.errors) {
           result.errors.forEach((error) => {
             form.setError(error.path as keyof z.infer<typeof wargaSchema>, {
               type: 'server',
               message: error.message,
-            })
-          })
+            });
+          });
         }
       }
-    })
+    });
   }
 
   return (
@@ -93,7 +93,7 @@ export default function DaftarForm() {
         {/* --- Bagian A --- */}
         <FormSection
           title="Data Identitas Pemohon"
-          description="Sesuai KTP & KK."
+          description="Sesuai KTP & KK"
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
@@ -283,7 +283,7 @@ export default function DaftarForm() {
         {/* --- Bagian B --- */}
         <FormSection
           title="Data Domisili & Kontak"
-          description="Data faktual untuk keperluan verifikasi dan notifikasi."
+          description="Data faktual untuk keperluan verifikasi dan notifikasi"
         />
         <FormField
           control={form.control}
@@ -344,7 +344,7 @@ export default function DaftarForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email (Opsional)</FormLabel>
+              <FormLabel>Email *</FormLabel>
               <FormControl>
                 <Input type="email" {...field} />
               </FormControl>
@@ -356,7 +356,7 @@ export default function DaftarForm() {
         {/* --- Bagian C --- */}
         <FormSection
           title="Berkas Pendukung"
-          description="Unggah foto atau scan KTP dan KK Anda (Maksimal 5MB)."
+          description="Unggah foto atau scan KTP dan KK Anda (Maksimal 5MB)"
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <FormField
@@ -404,5 +404,5 @@ export default function DaftarForm() {
         </div>
       </form>
     </Form>
-  )
+  );
 }

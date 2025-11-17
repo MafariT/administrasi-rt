@@ -1,14 +1,14 @@
-import { Suspense } from 'react'
+import { Suspense } from 'react';
 import {
   SkeletonStatCard,
   SkeletonChart,
   SkeletonActivityItem,
-} from '@/components/base/SkeletonLoader'
+} from '@/components/base/SkeletonLoader';
 import {
   RecentActivity,
   RegistrationChart,
   StatCards,
-} from '@/lib/helper/AdminHelper'
+} from '@/lib/helper/AdminHelper';
 
 export default function AdminOverviewPage() {
   return (
@@ -46,5 +46,5 @@ export default function AdminOverviewPage() {
         </div>
       </div>
     </div>
-  )
+  );
 }

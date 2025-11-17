@@ -1,12 +1,12 @@
-'use client'
+'use client';
 
-import Link from 'next/link'
-import { ChevronDownIcon } from '@heroicons/react/24/solid'
-import { DropdownProps } from '@/lib/types'
+import Link from 'next/link';
+import { ChevronDownIcon } from '@heroicons/react/24/solid';
+import { DropdownProps } from '@/lib/types';
 
 export default function Dropdown({ title, items }: DropdownProps) {
   return (
-    <div className="relative inline-block text-left group"> 
+    <div className="relative inline-block text-left group">
       <button className="flex items-center space-x-1 text-sm font-medium text-white hover:text-gray-200 outline-none focus:outline-none">
         <span>{title}</span>
         <ChevronDownIcon className="h-4 w-4 group-hover:rotate-180 transition-transform" />
@@ -28,5 +28,5 @@ export default function Dropdown({ title, items }: DropdownProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }
