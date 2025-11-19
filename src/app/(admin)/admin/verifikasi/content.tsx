@@ -2,11 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { columns } from './columns';
 import { DataTable } from '@/components/base/DataTable';
 
-export default async function VerificationContent({
-  searchQuery,
-}: {
-  searchQuery: string;
-}) {
+export default async function VerificationContent({}: {}) {
   const supabase = createClient();
 
   let query = supabase
@@ -14,10 +10,6 @@ export default async function VerificationContent({
     .select('*')
     .eq('status', 'pending_verification')
     .order('created_at', { ascending: true });
-
-  if (searchQuery) {
-    query = query.ilike('full_name', `%${searchQuery}%`);
-  }
 
   const { data, error } = await query;
 

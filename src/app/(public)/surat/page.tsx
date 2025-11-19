@@ -1,10 +1,14 @@
 'use client';
 
 import Stepper from '@/components/base/Stepper';
-import { NikCheckForm, SuratRequestForm } from '@/components/SuratForm';
+import {
+  NikCheckForm,
+  SubmissionSuccess,
+  SuratRequestForm,
+} from '@/components/SuratForm';
 import { useState } from 'react';
 
-const steps = ['Verifikasi NIK', 'Isi Formulir Surat'];
+const steps = ['Verifikasi NIK', 'Isi Formulir Surat', 'Selesai'];
 
 export default function SuratPage() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -13,6 +17,10 @@ export default function SuratPage() {
   const handleNikVerified = (wargaData: any) => {
     setVerifiedWarga(wargaData);
     setCurrentStep(2);
+  };
+
+  const handleSubmissionSuccess = () => {
+    setCurrentStep(3);
   };
 
   return (
@@ -37,8 +45,13 @@ export default function SuratPage() {
           )}
 
           {currentStep === 2 && verifiedWarga && (
-            <SuratRequestForm warga={verifiedWarga} />
+            <SuratRequestForm
+              warga={verifiedWarga}
+              onSubmissionSuccess={handleSubmissionSuccess}
+            />
           )}
+
+          {currentStep === 3 && <SubmissionSuccess />}
         </div>
       </div>
     </div>
