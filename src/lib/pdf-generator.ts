@@ -1,5 +1,6 @@
 import PDFDocument from 'pdfkit';
 import { WargaProfile } from './types';
+import path from 'path';
 
 interface SuratData {
   warga: WargaProfile;
@@ -10,6 +11,7 @@ interface SuratData {
 
 export function generateSuratKeteranganPDF(data: SuratData): Promise<Buffer> {
   return new Promise((resolve, reject) => {
+    const logoPath = path.join(process.cwd(), 'public/img/logo-pdf.png');
     const doc = new PDFDocument({
       size: 'A4',
       margins: { top: 50, bottom: 50, left: 72, right: 72 },
@@ -25,7 +27,7 @@ export function generateSuratKeteranganPDF(data: SuratData): Promise<Buffer> {
     // --- PDF CONTENT ---
 
     // Header
-    doc.image('public/img/logo-pdf.png', 72, 50, {
+    doc.image(logoPath, 72, 50, {
       width: 60,
     });
     doc.y = 60;
