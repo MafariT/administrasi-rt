@@ -24,9 +24,16 @@ export const wargaSchema = z.object({
     })
     .regex(/^\d+$/, 'Nomor KK hanya boleh berisi angka.'),
   tempat_lahir: z.string().min(1, { message: 'Tempat lahir harus diisi.' }),
-  tanggal_lahir: z.string().refine((date) => !isNaN(Date.parse(date)), {
-    message: 'Tanggal lahir tidak valid.',
-  }),
+  tanggal_lahir: z.string().refine(
+    (date) => {
+      const parsedDate = Date.parse(date);
+      return !isNaN(parsedDate) && new Date(parsedDate) <= new Date();
+    },
+    {
+      message: 'Tanggal lahir tidak valid.',
+    }
+  ),
+
   jenis_kelamin: z.enum(['Laki-laki', 'Perempuan'], {
     message: 'Harap pilih jenis kelamin.',
   }),
@@ -79,9 +86,15 @@ export const updateWargaSchema = z.object({
     message: 'Nomor KK harus terdiri dari 16 digit.',
   }),
   tempat_lahir: z.string().min(1, { message: 'Tempat lahir harus diisi.' }),
-  tanggal_lahir: z.string().refine((date) => !isNaN(Date.parse(date)), {
-    message: 'Tanggal lahir tidak valid.',
-  }),
+  tanggal_lahir: z.string().refine(
+    (date) => {
+      const parsedDate = Date.parse(date);
+      return !isNaN(parsedDate) && new Date(parsedDate) <= new Date();
+    },
+    {
+      message: 'Tanggal lahir tidak valid.',
+    }
+  ),
   jenis_kelamin: z.enum(['Laki-laki', 'Perempuan'], {
     message: 'Harap pilih jenis kelamin.',
   }),

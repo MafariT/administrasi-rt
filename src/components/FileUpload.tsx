@@ -99,7 +99,7 @@ export default function FileUpload({ form, name, label }: FileUploadProps) {
                         alt="Preview"
                         width={100}
                         height={100}
-                        className="max-h-24 w-auto rounded-md"
+                        className="max-h-40 w-auto rounded-md"
                       />
                     )}
                     <p className="mt-2 text-sm font-medium text-gray-700 truncate max-w-full px-2">
