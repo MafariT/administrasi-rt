@@ -9,10 +9,13 @@ export default async function BantuanLayout({
   const posts = await getAllPosts();
 
   return (
-    <div className="container mx-auto py-12 px-6">
-      <div className="flex flex-col md:flex-row gap-10">
-        <HelpSidebar posts={posts} />
-        <div className="flex-grow">{children}</div>
+    <div className="container mx-auto">
+      <div className="md:grid md:grid-cols-[256px_1fr] md:gap-6">
+        <div>
+          <HelpSidebar posts={posts} />
+        </div>
+
+        <div className="min-w-0">{children}</div>
       </div>
     </div>
   );

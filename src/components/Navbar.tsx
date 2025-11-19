@@ -38,6 +38,7 @@ export default function Navbar() {
     { name: 'Beranda', href: '/' },
     { name: 'Daftar Sebagai Warga', href: '/daftar' },
     { name: 'Ajukan Surat Pengantar', href: '/surat' },
+    { name: 'Cek Status Surat', href: '/surat/cek-status' },
     { name: 'Pusat Bantuan', href: '/bantuan' },
   ];
 
@@ -61,6 +62,39 @@ export default function Navbar() {
               <div className="text-sm text-gray-200">RT 012 Puri Kemajuan</div>
             </div>
           </Link>
+
+          <div className="hidden md:flex justify-center items-center">
+            <NavigationMenu delayDuration={0}>
+              <NavigationMenuList>
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link href="/">Beranda</Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                  <NavigationMenuTrigger>Layanan</NavigationMenuTrigger>
+                  <NavigationMenuContent>
+                    <ul className="grid w-[200px] gap-4">
+                      {layananComponents.map((component) => (
+                        <ListItem
+                          key={component.title}
+                          title={component.title}
+                          href={component.href}
+                        ></ListItem>
+                      ))}
+                    </ul>
+                  </NavigationMenuContent>
+                </NavigationMenuItem>
+
+                <NavigationMenuItem>
+                  <NavigationMenuLink asChild>
+                    <Link href="/bantuan">Pusat Bantuan</Link>
+                  </NavigationMenuLink>
+                </NavigationMenuItem>
+              </NavigationMenuList>
+            </NavigationMenu>
+          </div>
 
           <div className="hidden md:flex items-center space-x-4">
             <span className="text-sm">Hubungi kami</span>
@@ -94,39 +128,6 @@ export default function Navbar() {
               )}
             </button>
           </div>
-        </div>
-
-        <div className="hidden md:flex justify-center items-center py-2">
-          <NavigationMenu delayDuration={0}>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link href="/">Beranda</Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>Layanan</NavigationMenuTrigger>
-                <NavigationMenuContent>
-                  <ul className="grid w-[200px] gap-4">
-                    {layananComponents.map((component) => (
-                      <ListItem
-                        key={component.title}
-                        title={component.title}
-                        href={component.href}
-                      ></ListItem>
-                    ))}
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-
-              <NavigationMenuItem>
-                <NavigationMenuLink asChild>
-                  <Link href="/bantuan">Pusat Bantuan</Link>
-                </NavigationMenuLink>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
         </div>
 
         <div
