@@ -27,6 +27,7 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { toast } from 'sonner';
 import { Spinner } from './ui/spinner';
+import FileUpload from './FileUpload';
 
 function FormSection({
   title,
@@ -359,41 +360,15 @@ export default function DaftarForm() {
           description="Unggah foto atau scan KTP dan KK Anda (Maksimal 5MB)"
         />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <FormField
-            control={form.control}
+          <FileUpload
+            form={form}
             name="ktp_file"
-            render={({ field: { value, onChange, ...fieldProps } }) => (
-              <FormItem>
-                <FormLabel>Upload Foto/Scan KTP *</FormLabel>
-                <FormControl>
-                  <Input
-                    {...fieldProps}
-                    type="file"
-                    accept="image/*,.pdf"
-                    onChange={(e) => onChange(e.target.files?.[0])}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Upload Foto/Scan KTP *"
           />
-          <FormField
-            control={form.control}
+          <FileUpload
+            form={form}
             name="kk_file"
-            render={({ field: { value, onChange, ...fieldProps } }) => (
-              <FormItem>
-                <FormLabel>Upload Foto/Scan KK *</FormLabel>
-                <FormControl>
-                  <Input
-                    {...fieldProps}
-                    type="file"
-                    accept="image/*,.pdf"
-                    onChange={(e) => onChange(e.target.files?.[0])}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+            label="Upload Foto/Scan KK *"
           />
         </div>
 

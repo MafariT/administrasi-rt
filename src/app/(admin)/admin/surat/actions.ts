@@ -8,7 +8,6 @@ export async function approveSuratRequest(requestId: string) {
   const supabase = createClient();
 
   try {
-    // 1. Fetch the request AND the related warga data
     const { data: request, error: requestError } = await supabase
       .from('surat_requests')
       .select('*, warga:warga_id(*)')
@@ -19,11 +18,9 @@ export async function approveSuratRequest(requestId: string) {
       throw new Error('Permintaan surat atau data warga tidak ditemukan.');
     }
 
-    // 2. Generate a unique number (example format)
     const now = new Date();
     const uniqueNumber = `${String(request.id).padStart(3, '0')}/RT12/MI/${now.getMonth() + 1}/${now.getFullYear()}`;
 
-    // 3. Generate the PDF buffer
     const pdfBuffer = await generateSuratKeteranganPDF({
       warga: request.warga,
       uniqueNumber: uniqueNumber,
@@ -31,7 +28,6 @@ export async function approveSuratRequest(requestId: string) {
       letterType: request.letter_type,
     });
 
-    // 4. Upload the PDF to Supabase Storage
     const filePath = `surat_${request.warga.nik}_${Date.now()}.pdf`;
     const { data: uploadData, error: uploadError } = await supabase.storage
       .from('surat_arsip')
@@ -43,13 +39,12 @@ export async function approveSuratRequest(requestId: string) {
       throw new Error(`Gagal mengunggah PDF: ${uploadError.message}`);
     }
 
-    // 5. Update the request in the database
     const { error: updateError } = await supabase
       .from('surat_requests')
       .update({
         status: 'selesai',
         unique_number: uniqueNumber,
-        file_url: uploadData.path, // Save the path
+        file_url: uploadData.path,
       })
       .eq('id', requestId);
 

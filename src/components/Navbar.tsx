@@ -28,6 +28,10 @@ export default function Navbar() {
       title: 'Ajukan Surat Pengantar',
       href: '/surat',
     },
+    {
+      title: 'Cek Status Surat',
+      href: '/surat/cek-status',
+    },
   ];
 
   const mobileNavLinks = [
@@ -93,7 +97,7 @@ export default function Navbar() {
         </div>
 
         <div className="hidden md:flex justify-center items-center py-2">
-          <NavigationMenu>
+          <NavigationMenu delayDuration={0}>
             <NavigationMenuList>
               <NavigationMenuItem>
                 <NavigationMenuLink asChild>

@@ -1,15 +1,13 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import { WargaProfile } from '@/lib/types'; // Your main type for a resident
+import { WargaProfile } from '@/lib/types';
 
-// Import reusable components
 import { Badge } from '@/components/ui/badge';
 import AdminWargaActions from '@/components/Admin/AdminWargaActions';
 import { DataTableColumnHeader } from '@/components/base/DataTableColumnHeader';
 
 export const columns: ColumnDef<WargaProfile>[] = [
-  // Column 2: Full Name (Sortable)
   {
     accessorKey: 'full_name',
     header: ({ column }) => (
@@ -20,7 +18,6 @@ export const columns: ColumnDef<WargaProfile>[] = [
     },
   },
 
-  // Column 3: NIK
   {
     accessorKey: 'nik',
     header: ({ column }) => (
@@ -29,7 +26,6 @@ export const columns: ColumnDef<WargaProfile>[] = [
     cell: ({ row }) => <div className="font-mono">{row.getValue('nik')}</div>,
   },
 
-  // Column 4: Status (with custom badge colors)
   {
     accessorKey: 'status',
     header: ({ column }) => (
@@ -65,7 +61,6 @@ export const columns: ColumnDef<WargaProfile>[] = [
     },
   },
 
-  // Column 5: Actions (Edit/Delete)
   {
     id: 'actions',
     header: () => <div>AKSI</div>,
