@@ -5,13 +5,7 @@ import { DataTableSkeleton } from '@/components/base/SkeletonLoader';
 
 export const dynamic = 'force-dynamic';
 
-export default function AdminVerificationPage({
-  searchParams,
-}: {
-  searchParams?: { search?: string };
-}) {
-  const searchQuery = searchParams?.search || '';
-
+export default function AdminVerificationPage({}: {}) {
   return (
     <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-lg">
       <div className="border-b border-gray-200 pb-6 mb-8">
@@ -22,7 +16,7 @@ export default function AdminVerificationPage({
       </div>
 
       <Suspense fallback={<DataTableSkeleton columnCount={columns.length} />}>
-        <VerificationContent searchQuery={searchQuery} />
+        <VerificationContent />
       </Suspense>
     </div>
   );
