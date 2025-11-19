@@ -26,6 +26,7 @@ import {
   SelectValue,
 } from './ui/select';
 import { Spinner } from './ui/spinner';
+import { CheckCircleIcon } from '@heroicons/react/24/outline';
 
 export const LETTER_TYPES = [
   'Kartu Keluarga (KK)',
@@ -107,8 +108,10 @@ export function NikCheckForm({
 
 export function SuratRequestForm({
   warga,
+  onSubmissionSuccess,
 }: {
   warga: { id: number; full_name: string | null };
+  onSubmissionSuccess: () => void;
 }) {
   const [isPending, startTransition] = useTransition();
 
@@ -130,7 +133,7 @@ export function SuratRequestForm({
         loading: 'Mengirim pengajuan...',
         success: (result) => {
           if (!result.success) throw new Error(result.message);
-          form.reset();
+          onSubmissionSuccess();
           return result.message;
         },
         error: (error) => error.message,
@@ -221,5 +224,19 @@ export function SuratRequestForm({
         </form>
       </Form>
     </>
+  );
+}
+
+export function SubmissionSuccess() {
+  return (
+    <div className="text-center py-8">
+      <CheckCircleIcon className="h-16 w-16 text-green-500 mx-auto" />
+      <h2 className="mt-4 text-2xl font-bold text-gray-800">
+        Pengajuan Berhasil Dikirim!
+      </h2>
+      <p className="mt-2 text-gray-600">
+        Ketua RT akan segera memproses permintaan Anda
+      </p>
+    </div>
   );
 }

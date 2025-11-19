@@ -14,7 +14,7 @@ export default function CekStatusPage() {
             Cek Status Pengajuan
           </h1>
           <p className="mt-2 text-gray-600">
-            Masukkan NIK Anda untuk melihat riwayat dan status pengajuan surat.
+            Masukkan NIK Anda untuk melihat riwayat dan status pengajuan surat
           </p>
         </div>
         {resultData ? (
