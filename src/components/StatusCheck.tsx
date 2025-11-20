@@ -22,6 +22,7 @@ import { id } from 'date-fns/locale';
 import { DownloadIcon } from 'lucide-react';
 import { getRequestsByNik } from '@/app/(public)/surat/cek-status/actions';
 import { Spinner } from './ui/spinner';
+import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
 
 export function StatusCheckForm({
   onCheckSuccess,
@@ -138,6 +139,13 @@ export function StatusResult({
                   <Badge className="bg-red-100 text-red-800 dark:bg-red-300 dark:text-black">
                     Ditolak
                   </Badge>
+                )}
+
+                {req.status === 'ditolak' && req.rejection_reason && (
+                  <div className="p-3 bg-red-50 border-l-4 border-red-400 text-sm text-red-700 flex items-center">
+                    <ExclamationCircleIcon className='w-6 h-6 mr-2' />
+                    <strong>Alasan Penolakan: </strong> {req.rejection_reason}
+                  </div>
                 )}
 
                 {req.status === 'selesai' && req.download_url && (
