@@ -6,13 +6,7 @@ import { toast } from 'sonner'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import RejectionModal from './RejectionModal'
-
-type SuratRequest = {
-  id: number;
-  letter_type: string;
-  form_data: { keperluan?: string };
-  warga: { full_name: string | null; nik: string | null };
-}
+import { SuratRequest } from '@/lib/types'
 
 function SuratDetailModal({ request, isOpen, onClose }: { request: SuratRequest, isOpen: boolean, onClose: () => void }) {
     return (
@@ -22,8 +16,8 @@ function SuratDetailModal({ request, isOpen, onClose }: { request: SuratRequest,
             <DialogTitle>Detail Permintaan Surat</DialogTitle>
           </DialogHeader>
           <div className="py-4 space-y-4">
-            <div><p className="text-sm text-gray-500">Nama Pemohon</p><p className="font-semibold">{request.warga.full_name}</p></div>
-            <div><p className="text-sm text-gray-500">NIK</p><p className="font-mono">{request.warga.nik}</p></div>
+            <div><p className="text-sm text-gray-500">Nama Pemohon</p><p className="font-semibold">{request.warga?.full_name}</p></div>
+            <div><p className="text-sm text-gray-500">NIK</p><p className="font-mono">{request.warga?.nik}</p></div>
             <div><p className="text-sm text-gray-500">Jenis Surat</p><p className="font-semibold">{request.letter_type}</p></div>
             <div><p className="text-sm text-gray-500">Keperluan</p><p>{request.form_data.keperluan || '-'}</p></div>
           </div>
