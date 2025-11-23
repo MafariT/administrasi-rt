@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import '../styles/global.css';
-import Footer from '@/components/base/Footer';
+import Footer from '@/components/Footer';
 import NextTopLoader from 'nextjs-toploader';
 import { Toaster } from 'sonner';
 import { Analytics } from '@vercel/analytics/next';
