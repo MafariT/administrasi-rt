@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import '../styles/global.css';
-import Footer from '@/components/base/Footer';
+import Footer from '@/components/Footer';
 import NextTopLoader from 'nextjs-toploader';
 import { Toaster } from 'sonner';
 import { Analytics } from '@vercel/analytics/next';
@@ -21,18 +21,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.className} bg-gray-100`}>
+      <body
+        className={`${inter.className} bg-slate-50 min-h-screen flex flex-col`}
+      >
         <NextTopLoader color="#61f8f1ff" showSpinner={false} shadow={false} />
         <Toaster richColors position="top-center" duration={7000} />
-        <div className="flex flex-col min-h-screen">
-          {/* Page content */}
-          <main className="flex-grow">
-            {children}
-            <Analytics />
-            <SpeedInsights />
-          </main>
-          <Footer />
-        </div>
+
+        <main className="flex-grow">
+          {children}
+          <Analytics />
+          <SpeedInsights />
+        </main>
+        <Footer />
       </body>
     </html>
   );

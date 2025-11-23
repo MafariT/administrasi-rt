@@ -42,7 +42,7 @@ export default function TableOfContents() {
 
   return (
     <aside className="hidden lg:block w-64 flex-shrink-0 sticky top-24 h-fit">
-      <div className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-gray-100 shadow-md">
+      <div className="bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-gray-300">
         <h3 className="text-sm font-semibold text-gray-800 mb-3">
           Pada Halaman Ini
         </h3>

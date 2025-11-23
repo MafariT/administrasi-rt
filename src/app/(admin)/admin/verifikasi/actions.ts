@@ -65,12 +65,15 @@ export async function verifyWarga(userId: string) {
   }
 }
 
-export async function rejectWarga(userId: string) {
+export async function rejectWarga(userId: string, reason: string) {
   const supabase = createClient();
   try {
     const { error } = await supabase
       .from('warga')
-      .update({ status: 'ditolak' })
+      .update({
+        status: 'ditolak',
+        rejection_reason: reason 
+      })
       .eq('id', userId);
     if (error) throw error;
     revalidatePath('/admin/verifikasi');

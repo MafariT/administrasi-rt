@@ -12,7 +12,7 @@ import {
 
 export default function AdminOverviewPage() {
   return (
-    <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-lg space-y-8">
+    <div className="bg-white p-6 sm:p-8 rounded-2xl border border-gray-200 space-y-8">
       <div className="border-b border-gray-200 pb-6 mb-8">
         <h1 className="text-3xl font-bold text-gray-800">Admin Overview</h1>
         <p className="mt-2 text-gray-600">Admin Overview</p>

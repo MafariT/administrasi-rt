@@ -46,7 +46,7 @@ export function SkeletonStatCard() {
 
 export function SkeletonChart() {
   return (
-    <div className="p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-lg bg-white">
+    <div className="p-6 sm:p-8 rounded-2xl border border-gray-200 bg-white">
       <Skeleton className="h-6 w-1/3 mb-4" />
       <Skeleton className="h-80 w-full rounded-lg" />
     </div>
@@ -55,7 +55,7 @@ export function SkeletonChart() {
 
 export function SkeletonActivityItem() {
   return (
-    <div className="p-6 sm:p-8 rounded-2xl border border-gray-200 shadow-lg bg-white h-full">
+    <div className="p-6 sm:p-8 rounded-2xl border border-gray-200 bg-white h-full">
       <div className="space-y-4">
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-10" />

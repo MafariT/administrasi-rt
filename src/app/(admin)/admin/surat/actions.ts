@@ -64,12 +64,15 @@ export async function approveSuratRequest(requestId: string) {
   }
 }
 
-export async function rejectSuratRequest(requestId: string) {
+export async function rejectSuratRequest(requestId: string, reason: string) {
   const supabase = createClient();
   try {
     const { error } = await supabase
       .from('surat_requests')
-      .update({ status: 'ditolak' })
+      .update({
+        status: 'ditolak',
+        rejection_reason: reason 
+      })
       .eq('id', requestId);
 
     if (error) throw error;

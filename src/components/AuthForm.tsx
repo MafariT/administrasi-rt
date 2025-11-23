@@ -58,7 +58,7 @@ export default function AuthForm({ mode }: AuthFormProps) {
   };
 
   return (
-    <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-2xl border border-gray-200 shadow-lg">
+    <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-2xl border border-gray-200">
       <h1 className="text-3xl font-bold text-center text-gray-800">
         {isRegisterMode ? 'Daftar' : 'Masuk'}
       </h1>

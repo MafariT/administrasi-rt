@@ -13,7 +13,7 @@ export default function Dropdown({ title, items }: DropdownProps) {
       </button>
 
       <div className="absolute left-1/2 -translate-x-1/2 pt-2 w-48 origin-top-right bg-transparent z-50 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-150">
-        <div className="bg-primary shadow-lg ring-0">
+        <div className="bg-primary ring-0">
           <div className="py-1">
             {items.map((item) => (
               <Link
