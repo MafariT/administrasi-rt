@@ -21,7 +21,7 @@ export default function Footer() {
             <div className="flex items-center space-x-3">
               <div className="relative h-10 w-10">
                 <Image
-                  src="/img/logo.svg"
+                  src="/img/logo-white.svg"
                   alt="Logo RT"
                   fill
                   className="object-contain"
