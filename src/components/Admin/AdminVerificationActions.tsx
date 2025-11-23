@@ -1,80 +1,66 @@
-'use client';
+'use client'
 
-import { useState, useTransition } from 'react';
-import {
-  verifyWarga,
-  rejectWarga,
-} from '@/app/(admin)/admin/verifikasi/actions';
-import VerificationDetailModal from './VerificationDetailModal';
-import { toast } from 'sonner';
+import { useState, useTransition } from 'react'
+import { verifyWarga, rejectWarga } from '@/app/(admin)/admin/verifikasi/actions'
+import VerificationDetailModal from './VerificationDetailModal'
+import RejectionModal from './RejectionModal'
+import { toast } from 'sonner'
 
-export default function AdminVerificationActions({
-  userId,
-}: {
-  userId: string;
-}) {
+export default function AdminVerificationActions({ userId }: { userId: string }) {
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const handleAction = (action: 'verify' | 'reject') => {
-    const isRejecting = action === 'reject';
-    if (
-      isRejecting &&
-      !window.confirm('Apakah Anda yakin ingin menolak pendaftaran ini?')
-    ) {
-      return;
-    }
-
+  const handleVerify = () => {
     startTransition(() => {
-      const actionPromise = isRejecting
-        ? rejectWarga(userId)
-        : verifyWarga(userId);
-
-      toast.promise(actionPromise, {
-        loading: 'Memproses permintaan...',
+      toast.promise(verifyWarga(userId), {
+        loading: 'Memverifikasi pendaftaran...',
         success: (result) => {
-          if (result.success) {
-            return result.message;
-          } else {
-            throw new Error(result.message);
-          }
+          if (!result.success) throw new Error(result.message);
+          return result.message;
         },
-        error: (error) => {
-          return error.message;
-        },
+        error: (error) => error.message,
       });
     });
   };
 
+  const rejectWargaAction = (reason: string) => rejectWarga(userId, reason);
+
   return (
     <>
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-2">
         <button
-          onClick={() => setIsModalOpen(true)}
+          onClick={() => setIsDetailModalOpen(true)}
           disabled={isPending}
           className="text-blue-600 hover:text-blue-900 text-xs font-semibold disabled:text-gray-400"
         >
           Lihat Berkas
         </button>
         <button
-          onClick={() => handleAction('verify')}
+          onClick={handleVerify}
           disabled={isPending}
           className="text-green-800 bg-green-100 hover:bg-green-200 px-3 py-1 rounded-md text-xs disabled:bg-gray-400"
         >
           Verifikasi
         </button>
         <button
-          onClick={() => handleAction('reject')}
+          onClick={() => setIsRejectModalOpen(true)}
           disabled={isPending}
           className="text-red-800 bg-red-100 hover:bg-red-200 px-3 py-1 rounded-md text-xs disabled:bg-gray-400"
         >
           Tolak
         </button>
       </div>
+
       <VerificationDetailModal
         userId={userId}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isDetailModalOpen}
+        onClose={() => setIsDetailModalOpen(false)}
+      />
+      <RejectionModal
+        isOpen={isRejectModalOpen}
+        onClose={() => setIsRejectModalOpen(false)}
+        action={rejectWargaAction}
       />
     </>
   );
