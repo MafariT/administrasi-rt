@@ -14,7 +14,7 @@ export default function AdminLayout({
   const { user } = useSession();
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-slate-50">
       <AdminSidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
       <div
         className={`transition-all duration-300 ease-in-out ${

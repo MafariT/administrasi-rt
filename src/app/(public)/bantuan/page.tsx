@@ -18,7 +18,7 @@ export default async function BantuanHubPage() {
   const posts = await getAllPosts();
 
   return (
-    <div className="bg-white p-8 sm:p-12 rounded-2xl border border-gray-200 shadow-lg">
+    <div className="bg-white p-8 sm:p-12 rounded-2xl border border-gray-300">
       <div className="text-center border-b border-gray-200 pb-6 mb-8">
         <h1 className="text-4xl font-bold text-primary">Pusat Bantuan</h1>
         <p className="mt-2 text-gray-600">

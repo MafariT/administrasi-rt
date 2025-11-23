@@ -43,7 +43,7 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="bg-primary text-white shadow-md sticky top-0 z-50 relative">
+    <header className="bg-primary text-white sticky top-0 z-50 relative">
       <div className="container mx-auto px-6">
         <div className="flex justify-between items-center py-4">
           <Link href="/" className="flex items-center space-x-3 z-20">

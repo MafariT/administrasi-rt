@@ -21,18 +21,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth">
-      <body className={`${inter.className} bg-gray-100`}>
+      <body
+        className={`${inter.className} bg-slate-50 min-h-screen flex flex-col`}
+      >
         <NextTopLoader color="#61f8f1ff" showSpinner={false} shadow={false} />
         <Toaster richColors position="top-center" duration={7000} />
-        <div className="flex flex-col min-h-screen">
-          {/* Page content */}
-          <main className="flex-grow">
-            {children}
-            <Analytics />
-            <SpeedInsights />
-          </main>
-          <Footer />
-        </div>
+
+        <main className="flex-grow">
+          {children}
+          <Analytics />
+          <SpeedInsights />
+        </main>
+        <Footer />
       </body>
     </html>
   );

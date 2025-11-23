@@ -8,7 +8,7 @@ export default function HelpSidebar({ posts }: HelpSidebarProps) {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden md:block w-64 flex-shrink-0 bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-gray-100 shadow-md sticky top-24 h-fit">
+    <aside className="hidden md:block w-64 flex-shrink-0 bg-white/90 backdrop-blur-sm p-6 rounded-2xl border border-gray-300 sticky top-24 h-fit">
       <h2 className="text-lg font-bold text-primary mb-4">Topik Bantuan</h2>
       <nav>
         <ul className="space-y-1">

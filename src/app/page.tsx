@@ -49,7 +49,7 @@ export default function HomePage() {
   ];
 
   return (
-    <main className="bg-gradient-to-b from-primary/5 via-white to-white text-gray-800 min-h-screen">
+    <div className="bg-transparent text-gray-800 min-h-screen">
       <Navbar />
       {/* Hero Section */}
       <section className="relative overflow-hidden h-screen">
@@ -84,7 +84,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="flex justify-center md:justify-end relative">
+          <div className="flex justify-center md:justify-end relative hidden md:flex">
             <div className="flex justify-center">
               <Image
                 src="/img/hero-illustration.svg"
@@ -170,6 +170,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 }

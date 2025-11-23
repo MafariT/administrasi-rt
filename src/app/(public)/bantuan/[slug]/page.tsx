@@ -9,7 +9,7 @@ export default async function BantuanArticlePage({
   const { content, meta } = await getPostBySlug(slug);
 
   return (
-    <article className="bg-white p-8 sm:p-12 rounded-3xl border border-gray-100 shadow-md">
+    <article className="bg-white p-8 sm:p-12 rounded-3xl border border-gray-300">
       <header className="text-center border-b border-gray-200 pb-6 mb-8">
         <h1 className="text-3xl md:text-4xl font-bold text-primary">
           {meta.title}
