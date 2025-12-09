@@ -1,13 +1,11 @@
 'use server';
 
-import { createClient } from '@/lib/supabase/server';
+import { supabase } from '@/lib/supabase/admin';
 
 export async function getRequestsByNik(nik: string) {
   if (!nik || nik.length !== 16) {
     return { success: false, message: 'NIK tidak valid.', data: null };
   }
-
-  const supabase = createClient();
 
   try {
     const { data: warga, error: wargaError } = await supabase

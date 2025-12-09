@@ -28,7 +28,8 @@ import {
 } from './ui/select';
 import { Spinner } from './ui/spinner';
 import { CheckCircleIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
-import { Label } from './ui/label';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from './ui/input-otp';
+import { REGEXP_ONLY_DIGITS } from 'input-otp';
 
 export const LETTER_TYPES = [
   'Kartu Keluarga (KK)',
@@ -100,26 +101,30 @@ export function NikCheckForm({
   if (step === 'otp') {
     return (
       <div className="text-center animate-in fade-in slide-in-from-bottom-4 duration-300">
-        <h2 className="text-2xl font-bold text-primary mb-2">
-          Masukkan Kode OTP
-        </h2>
         <p className="text-gray-600 text-sm mb-6">
           Kami telah mengirimkan kode verifikasi ke email yang terdaftar untuk
-          NIK <strong>{currentNik}</strong>.
+          NIK <strong>{currentNik}</strong>
         </p>
-
         <form action={handleVerifyOtp} className="space-y-4 max-w-xs mx-auto">
-          <div className="space-y-2 text-left">
-            <Label htmlFor="otp">Kode OTP</Label>
-            <Input
-              id="otp"
-              name="otp"
-              type="text"
-              placeholder="123456"
+          <div className="space-y-2 flex flex-col items-center">
+            <InputOTP
               maxLength={6}
-              className="text-center text-2xl tracking-[0.5em] font-bold h-14"
+              name="otp"
+              pattern={REGEXP_ONLY_DIGITS}
               autoFocus
-            />
+            >
+              <InputOTPGroup>
+                <InputOTPSlot index={0} />
+                <InputOTPSlot index={1} />
+                <InputOTPSlot index={2} />
+                <InputOTPSlot index={3} />
+                <InputOTPSlot index={4} />
+                <InputOTPSlot index={5} />
+              </InputOTPGroup>
+            </InputOTP>
+            <p className="text-xs text-muted-foreground">
+              Masukkan 6 digit kode yang Anda terima
+            </p>
           </div>
           <Button
             type="submit"

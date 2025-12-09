@@ -21,10 +21,11 @@ import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
 import { DownloadIcon, ArrowLeftIcon } from 'lucide-react';
 import { getRequestsByNik } from '@/app/(public)/surat/cek-status/actions';
-import { requestOtp, verifyOtp } from '@/lib/helper/otp'; // Ensure this exists
+import { requestOtp, verifyOtp } from '@/lib/helper/otp';
 import { Spinner } from './ui/spinner';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
-import { Label } from './ui/label';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from './ui/input-otp';
+import { REGEXP_ONLY_DIGITS } from 'input-otp';
 
 export function StatusCheckForm({
   onCheckSuccess,
@@ -82,25 +83,30 @@ export function StatusCheckForm({
   if (step === 'otp') {
     return (
       <div className="text-center animate-in fade-in slide-in-from-bottom-4 duration-300">
-        <h2 className="text-2xl font-bold text-primary mb-2">
-          Masukkan Kode OTP
-        </h2>
         <p className="text-gray-600 text-sm mb-6">
-          Masukkan kode yang dikirim ke email untuk NIK{' '}
-          <strong>{currentNik}</strong>.
+          Kami telah mengirimkan kode verifikasi ke email yang terdaftar untuk
+          NIK <strong>{currentNik}</strong>
         </p>
-
         <form action={handleVerifyOtp} className="space-y-4 max-w-xs mx-auto">
-          <div className="space-y-2 text-left">
-            <Label>Kode OTP</Label>
-            <Input
-              name="otp"
-              type="text"
-              placeholder="123456"
+          <div className="space-y-2 flex flex-col items-center">
+            <InputOTP
               maxLength={6}
-              className="text-center text-2xl tracking-[0.5em] font-bold h-14"
+              name="otp"
+              pattern={REGEXP_ONLY_DIGITS}
               autoFocus
-            />
+            >
+              <InputOTPGroup>
+                <InputOTPSlot index={0} />
+                <InputOTPSlot index={1} />
+                <InputOTPSlot index={2} />
+                <InputOTPSlot index={3} />
+                <InputOTPSlot index={4} />
+                <InputOTPSlot index={5} />
+              </InputOTPGroup>
+            </InputOTP>
+            <p className="text-xs text-muted-foreground">
+              Masukkan 6 digit kode yang Anda terima
+            </p>
           </div>
           <Button
             type="submit"
