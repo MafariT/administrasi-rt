@@ -1,22 +1,18 @@
 'use server';
 
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { createClient } from '@supabase/supabase-js';
 import nodemailer from 'nodemailer';
 
-function createClient() {
-  const cookieStore = cookies();
-
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.SUPABASE_SERVICE_ROLE_KEY!,
-    {
-      cookies: {
-        getAll: async () => (await cookieStore).getAll(),
-      },
-    }
-  );
-}
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+  {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+    },
+  }
+);
 
 const transporter = nodemailer.createTransport({
   host: process.env.BREVO_SMTP_HOST,
@@ -33,8 +29,6 @@ function generateCode() {
 }
 
 export async function requestOtp(nik: string) {
-  const supabase = createClient();
-
   const { data: warga, error } = await supabase
     .from('warga')
     .select('email, full_name, status')
@@ -72,7 +66,7 @@ export async function requestOtp(nik: string) {
 
   try {
     await transporter.sendMail({
-      from: '"Sistem RT Online" <ahmadfadlan432@gmail.com>',
+      from: `"Sistem RT Online" ${process.env.BREVO_SMTP_VERIFIED_EMAIL}`,
       to: warga.email,
       subject: 'Kode Verifikasi (OTP) - RT Online',
       text: `Halo ${warga.full_name},\n\nKode verifikasi Anda adalah: ${code}\n\nKode ini berlaku selama 5 menit. Jangan berikan kepada siapapun.`,
@@ -94,8 +88,6 @@ export async function requestOtp(nik: string) {
 }
 
 export async function verifyOtp(nik: string, code: string) {
-  const supabase = createClient();
-
   const { data, error } = await supabase
     .from('otp_codes')
     .select('*')
