@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { nikSchema, suratRequestSchema } from '@/lib/validations';
 import { verifyNik, submitSuratRequest } from '@/app/(public)/surat/actions';
+import { requestOtp, verifyOtp } from '@/lib/helper/otp';
 import { toast } from 'sonner';
 import { Button } from './ui/button';
 import {
@@ -26,7 +27,8 @@ import {
   SelectValue,
 } from './ui/select';
 import { Spinner } from './ui/spinner';
-import { CheckCircleIcon } from '@heroicons/react/24/outline';
+import { CheckCircleIcon, ArrowLeftIcon } from '@heroicons/react/24/outline';
+import { Label } from './ui/label';
 
 export const LETTER_TYPES = [
   'Kartu Keluarga (KK)',
@@ -49,39 +51,111 @@ export function NikCheckForm({
   onNikVerified: (data: any) => void;
 }) {
   const [isPending, startTransition] = useTransition();
+  const [step, setStep] = useState<'nik' | 'otp'>('nik');
+  const [currentNik, setCurrentNik] = useState('');
 
-  const form = useForm<z.infer<typeof nikSchema>>({
+  const nikForm = useForm<z.infer<typeof nikSchema>>({
     resolver: zodResolver(nikSchema),
     defaultValues: { nik: '' },
   });
 
-  const onSubmit = (values: z.infer<typeof nikSchema>) => {
-    startTransition(() => {
-      toast.promise(verifyNik(values), {
-        loading: 'Memeriksa NIK...',
-        success: (result) => {
-          if (!result.success) throw new Error(result.message);
-          onNikVerified(result.data);
-          return result.message;
-        },
-        error: (error) => error.message,
-      });
+  const onRequestOtp = (values: z.infer<typeof nikSchema>) => {
+    startTransition(async () => {
+      const result = await requestOtp(values.nik);
+      if (result.success) {
+        toast.success(result.message);
+        setCurrentNik(values.nik);
+        setStep('otp');
+      } else {
+        toast.error(result.message);
+      }
     });
   };
 
+  const handleVerifyOtp = async (formData: FormData) => {
+    const code = formData.get('otp') as string;
+    if (!code || code.length < 6) {
+      toast.error('Masukkan kode OTP 6 digit.');
+      return;
+    }
+
+    startTransition(async () => {
+      const otpResult = await verifyOtp(currentNik, code);
+      if (!otpResult.success) {
+        toast.error(otpResult.message);
+        return;
+      }
+
+      const verifyResult = await verifyNik({ nik: currentNik });
+
+      if (verifyResult.success) {
+        toast.success('Identitas terverifikasi.');
+        onNikVerified(verifyResult.data);
+      } else {
+        toast.error(verifyResult.message);
+      }
+    });
+  };
+
+  if (step === 'otp') {
+    return (
+      <div className="text-center animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <h2 className="text-2xl font-bold text-primary mb-2">
+          Masukkan Kode OTP
+        </h2>
+        <p className="text-gray-600 text-sm mb-6">
+          Kami telah mengirimkan kode verifikasi ke email yang terdaftar untuk
+          NIK <strong>{currentNik}</strong>.
+        </p>
+
+        <form action={handleVerifyOtp} className="space-y-4 max-w-xs mx-auto">
+          <div className="space-y-2 text-left">
+            <Label htmlFor="otp">Kode OTP</Label>
+            <Input
+              id="otp"
+              name="otp"
+              type="text"
+              placeholder="123456"
+              maxLength={6}
+              className="text-center text-2xl tracking-[0.5em] font-bold h-14"
+              autoFocus
+            />
+          </div>
+          <Button
+            type="submit"
+            disabled={isPending}
+            className="w-full h-12 text-base"
+          >
+            {isPending ? <Spinner /> : 'Verifikasi OTP'}
+          </Button>
+        </form>
+
+        <button
+          onClick={() => setStep('nik')}
+          className="mt-6 text-sm text-gray-500 hover:text-primary flex items-center justify-center mx-auto"
+        >
+          <ArrowLeftIcon className="w-4 h-4 mr-1" />
+          Ganti NIK / Kirim Ulang
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="text-center">
-      <Form {...form}>
+      <Form {...nikForm}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={nikForm.handleSubmit(onRequestOtp)}
           className="mt-8 space-y-4 text-left"
         >
           <FormField
-            control={form.control}
+            control={nikForm.control}
             name="nik"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Nomor Induk Kependudukan (NIK)</FormLabel>
+                <FormLabel className="text-primary font-semibold">
+                  Nomor Induk Kependudukan (NIK)
+                </FormLabel>
                 <FormControl>
                   <Input
                     {...field}
@@ -98,7 +172,7 @@ export function NikCheckForm({
             disabled={isPending}
             className="w-full py-6 text-base"
           >
-            {isPending ? <Spinner /> : 'Cek NIK'}
+            {isPending ? <Spinner /> : 'Kirim Kode OTP'}
           </Button>
         </form>
       </Form>
@@ -188,7 +262,7 @@ export function SuratRequestForm({
                 <FormItem>
                   <FormLabel>Sebutkan Keperluan Lainnya</FormLabel>
                   <FormControl>
-                    <Textarea
+                    <Input
                       {...field}
                       placeholder="Contoh: Surat Keterangan..."
                     />

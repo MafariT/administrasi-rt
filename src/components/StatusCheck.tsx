@@ -1,6 +1,6 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useTransition, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -19,10 +19,12 @@ import { Input } from './ui/input';
 import { Badge } from './ui/badge';
 import { format } from 'date-fns';
 import { id } from 'date-fns/locale';
-import { DownloadIcon } from 'lucide-react';
+import { DownloadIcon, ArrowLeftIcon } from 'lucide-react';
 import { getRequestsByNik } from '@/app/(public)/surat/cek-status/actions';
+import { requestOtp, verifyOtp } from '@/lib/helper/otp'; // Ensure this exists
 import { Spinner } from './ui/spinner';
 import { ExclamationCircleIcon } from '@heroicons/react/24/outline';
+import { Label } from './ui/label';
 
 export function StatusCheckForm({
   onCheckSuccess,
@@ -30,15 +32,43 @@ export function StatusCheckForm({
   onCheckSuccess: (data: any) => void;
 }) {
   const [isPending, startTransition] = useTransition();
-  const form = useForm<z.infer<typeof nikSchema>>({
+  const [step, setStep] = useState<'nik' | 'otp'>('nik');
+  const [currentNik, setCurrentNik] = useState('');
+
+  const nikForm = useForm<z.infer<typeof nikSchema>>({
     resolver: zodResolver(nikSchema),
     defaultValues: { nik: '' },
   });
 
-  const onSubmit = (values: z.infer<typeof nikSchema>) => {
-    startTransition(() => {
-      toast.promise(getRequestsByNik(values.nik), {
-        loading: 'Mencari data...',
+  const onRequestOtp = (values: z.infer<typeof nikSchema>) => {
+    startTransition(async () => {
+      const result = await requestOtp(values.nik);
+      if (result.success) {
+        toast.success(result.message);
+        setCurrentNik(values.nik);
+        setStep('otp');
+      } else {
+        toast.error(result.message);
+      }
+    });
+  };
+
+  const handleVerifyOtp = async (formData: FormData) => {
+    const code = formData.get('otp') as string;
+    if (!code || code.length < 6) {
+      toast.error('Masukkan kode OTP 6 digit.');
+      return;
+    }
+
+    startTransition(async () => {
+      const otpResult = await verifyOtp(currentNik, code);
+      if (!otpResult.success) {
+        toast.error(otpResult.message);
+        return;
+      }
+
+      toast.promise(getRequestsByNik(currentNik), {
+        loading: 'Mengambil data...',
         success: (result) => {
           if (!result.success) throw new Error(result.message);
           onCheckSuccess(result.data);
@@ -49,15 +79,58 @@ export function StatusCheckForm({
     });
   };
 
+  if (step === 'otp') {
+    return (
+      <div className="text-center animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <h2 className="text-2xl font-bold text-primary mb-2">
+          Masukkan Kode OTP
+        </h2>
+        <p className="text-gray-600 text-sm mb-6">
+          Masukkan kode yang dikirim ke email untuk NIK{' '}
+          <strong>{currentNik}</strong>.
+        </p>
+
+        <form action={handleVerifyOtp} className="space-y-4 max-w-xs mx-auto">
+          <div className="space-y-2 text-left">
+            <Label>Kode OTP</Label>
+            <Input
+              name="otp"
+              type="text"
+              placeholder="123456"
+              maxLength={6}
+              className="text-center text-2xl tracking-[0.5em] font-bold h-14"
+              autoFocus
+            />
+          </div>
+          <Button
+            type="submit"
+            disabled={isPending}
+            className="w-full h-12 text-base"
+          >
+            {isPending ? <Spinner /> : 'Cek Status'}
+          </Button>
+        </form>
+
+        <button
+          onClick={() => setStep('nik')}
+          className="mt-6 text-sm text-gray-500 hover:text-primary flex items-center justify-center mx-auto"
+        >
+          <ArrowLeftIcon className="w-4 h-4 mr-1" />
+          Ganti NIK
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="text-center">
-      <Form {...form}>
+      <Form {...nikForm}>
         <form
-          onSubmit={form.handleSubmit(onSubmit)}
+          onSubmit={nikForm.handleSubmit(onRequestOtp)}
           className="mt-8 space-y-4 text-left"
         >
           <FormField
-            control={form.control}
+            control={nikForm.control}
             name="nik"
             render={({ field }) => (
               <FormItem>
@@ -80,7 +153,7 @@ export function StatusCheckForm({
             disabled={isPending}
             className="w-full py-6 text-base"
           >
-            {isPending ? <Spinner /> : 'Cek Status'}
+            {isPending ? <Spinner /> : 'Kirim Kode OTP'}
           </Button>
         </form>
       </Form>
@@ -100,6 +173,23 @@ export function StatusResult({
   return (
     <div>
       <div className="mb-8">
+        {warga.status === 'ditolak' && (
+          <div className="p-4 mb-6 bg-red-50 border border-red-200 rounded-lg text-left">
+            <div className="flex items-start space-x-3">
+              <ExclamationCircleIcon className="h-6 w-6 text-red-600 flex-shrink-0" />
+              <div>
+                <h3 className="font-semibold text-red-800">
+                  Pendaftaran Ditolak
+                </h3>
+                <p className="mt-1 text-sm text-red-700">
+                  <strong>Alasan:</strong>{' '}
+                  {warga.rejection_reason || 'Tidak ada alasan yang diberikan.'}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
           <p className="text-sm text-green-800">NIK terverifikasi sebagai:</p>
           <p className="font-bold text-lg text-green-900">{warga.full_name}</p>
@@ -111,57 +201,63 @@ export function StatusResult({
           {requests.map((req: any) => (
             <div
               key={req.id}
-              className="p-4 border rounded-lg flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4"
+              className="p-4 border rounded-lg flex flex-col gap-4"
             >
-              <div>
-                <p className="font-semibold text-gray-800">{req.letter_type}</p>
-                <p className="text-sm text-gray-500">
-                  Diajukan pada:{' '}
-                  {format(new Date(req.created_at), 'd MMM yyyy, HH:mm', {
-                    locale: id,
-                  })}
-                </p>
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+                <div>
+                  <p className="font-semibold text-gray-800">
+                    {req.letter_type}
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    Diajukan pada:{' '}
+                    {format(new Date(req.created_at), 'd MMM yyyy, HH:mm', {
+                      locale: id,
+                    })}
+                  </p>
+                </div>
+                <div className="flex items-center gap-4 mt-2 sm:mt-0">
+                  {req.status === 'selesai' && (
+                    <Badge className="bg-green-100 text-green-800 hover:bg-green-200">
+                      Selesai
+                    </Badge>
+                  )}
+
+                  {req.status === 'pending' && (
+                    <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200">
+                      Sedang Diproses
+                    </Badge>
+                  )}
+
+                  {req.status === 'ditolak' && (
+                    <Badge className="bg-red-100 text-red-800 hover:bg-red-200">
+                      Ditolak
+                    </Badge>
+                  )}
+
+                  {req.status === 'selesai' && req.download_url && (
+                    <Button asChild size="sm">
+                      <a href={req.download_url} target="_blank">
+                        <DownloadIcon className="h-4 w-4 mr-2" />
+                        Unduh PDF
+                      </a>
+                    </Button>
+                  )}
+                </div>
               </div>
-              <div className="flex items-center gap-4">
-                {req.status === 'selesai' && (
-                  <Badge className="bg-green-100 text-green-800 dark:bg-green-300">
-                    Selesai
-                  </Badge>
-                )}
 
-                {req.status === 'pending' && (
-                  <Badge className="bg-yellow-100 text-yellow-800 dark:bg-yellow-300">
-                    Sedang Diproses
-                  </Badge>
-                )}
-
-                {req.status === 'ditolak' && (
-                  <Badge className="bg-red-100 text-red-800 dark:bg-red-300 dark:text-black">
-                    Ditolak
-                  </Badge>
-                )}
-
-                {req.status === 'ditolak' && req.rejection_reason && (
-                  <div className="p-3 bg-red-50 border-l-4 border-red-400 text-sm text-red-700 flex items-center">
-                    <ExclamationCircleIcon className='w-6 h-6 mr-2' />
+              {req.status === 'ditolak' && req.rejection_reason && (
+                <div className="p-3 bg-red-50 border-l-4 border-red-400 text-sm text-red-700 flex items-start">
+                  <ExclamationCircleIcon className="w-5 h-5 mr-2 flex-shrink-0 mt-0.5" />
+                  <div>
                     <strong>Alasan Penolakan: </strong> {req.rejection_reason}
                   </div>
-                )}
-
-                {req.status === 'selesai' && req.download_url && (
-                  <Button asChild size="sm">
-                    <a href={req.download_url} target="_blank">
-                      <DownloadIcon className="h-4 w-4 mr-2" />
-                      Unduh PDF
-                    </a>
-                  </Button>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
       ) : (
-        <p className="text-center text-gray-500">
+        <p className="text-center text-gray-500 py-8">
           Belum ada riwayat pengajuan surat untuk NIK ini.
         </p>
       )}
