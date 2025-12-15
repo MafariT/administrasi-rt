@@ -9,6 +9,22 @@ import {
 import Navbar from '@/components/Navbar';
 
 export default function HomePage() {
+    const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'GovernmentService',
+    'name': 'Pelayanan Administrasi RT 012',
+    'provider': {
+      '@type': 'Organization',
+      'name': 'RT 012 Puri Kemajuan'
+    },
+    'areaServed': {
+      '@type': 'AdministrativeArea',
+      'name': 'Puri Kemajuan'
+    },
+    'url': `https://${process.env.NEXT_PUBLIC_BASE_URL}`,
+    'serviceType': 'Civic Services'
+  }
+
   const processSteps = [
     {
       name: '1. Pendaftaran Data',
@@ -170,6 +186,10 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
     </div>
   );
 }

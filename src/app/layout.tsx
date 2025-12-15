@@ -9,10 +9,37 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const inter = Inter({ subsets: ['latin'] });
 
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL 
+  ? `https://${process.env.NEXT_PUBLIC_BASE_URL}` 
+  : 'http://localhost:3000';
+
 export const metadata: Metadata = {
-  title: 'Administrasi RT Online',
-  description: 'Sistem administrasi surat pengantar RT',
-};
+  metadataBase: new URL(baseUrl),
+  title: {
+    default: 'Sistem Administrasi RT 012 Puri Kemajuan',
+    template: '%s | RT 012 Puri Kemajuan',
+  },
+  description: 'Layanan digital untuk pendaftaran warga dan pengajuan surat pengantar secara mandiri, cepat, dan transparan.',
+  openGraph: {
+    title: 'Sistem Administrasi RT 012 Puri Kemajuan',
+    description: 'Urus surat pengantar RT kini lebih mudah dan cepat secara online.',
+    url: baseUrl,
+    siteName: 'RT 012 Online',
+    locale: 'id_ID',
+    type: 'website',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+}
 
 export default function RootLayout({
   children,
