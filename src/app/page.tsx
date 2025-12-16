@@ -69,7 +69,7 @@ export default function HomePage() {
       <Navbar />
       {/* Hero Section */}
       <section className="relative overflow-hidden h-screen">
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0 hidden md:flex">
           <Image
             src="/img/landing-page.jpeg"
             alt="Hero Background"
