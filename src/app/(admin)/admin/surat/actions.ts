@@ -54,7 +54,8 @@ export async function approveSuratRequest(requestId: string) {
     await sendSuratApprovedNotification(
       request.warga.email,
       request.warga.full_name,
-      request.letter_type
+      request.letter_type,
+      pdfBuffer
     );
 
     revalidatePath('/admin/surat');
@@ -73,7 +74,7 @@ export async function approveSuratRequest(requestId: string) {
 
 export async function rejectSuratRequest(requestId: string, reason: string) {
   const supabase = createClient()
-  
+
   try {
     const { data: request } = await supabase
       .from('surat_requests')

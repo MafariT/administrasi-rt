@@ -71,24 +71,22 @@ function getHtmlLayout(headerTitle: string, contentBody: string) {
 export async function sendSuratApprovedNotification(
   email: string,
   name: string,
-  letterType: string
+  letterType: string,
+  pdfBuffer: Buffer
 ) {
-  const checkStatusLink = `${getBaseUrl()}/cek-status`;
+  const checkStatusLink = `${getBaseUrl()}/surat/cek-status`;
 
   const content = `
     <p style="font-size: 16px; margin-bottom: 20px;">Halo <strong>${name}</strong>,</p>
     <p style="font-size: 16px; margin-bottom: 20px;">
-      Kabar baik! Permintaan surat Anda untuk <strong>"${letterType}"</strong> telah <strong style="color: #059669;">DISETUJUI</strong> dan diterbitkan oleh Ketua RT.
+      Permintaan surat Anda untuk <strong>"${letterType}"</strong> telah <strong style="color: #059669;">DISETUJUI</strong>.
+    </p>
+    <p style="font-size: 16px; margin-bottom: 20px;">
+      Dokumen surat Anda telah <strong>dilampirkan</strong> pada email ini.
     </p>
     
-    <div style="margin: 30px 0; text-align: center;">
-      <a href="${checkStatusLink}" style="background-color: #0D9488; color: #ffffff; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
-        Download Surat PDF
-      </a>
-    </div>
-
-    <p style="font-size: 14px; color: #6b7280;">
-      Silakan klik tombol di atas atau buka menu "Cek Status" di website untuk mengunduh dokumen Anda.
+    <p style="font-size: 14px; color: #6b7280; margin-top: 30px;">
+      Anda juga dapat mengunduh ulang surat ini kapan saja melalui menu <a href="${checkStatusLink}" style="color: #0D9488; text-decoration: underline;">Cek Status</a> di website.
     </p>
   `;
 
@@ -96,8 +94,15 @@ export async function sendSuratApprovedNotification(
     await transporter.sendMail({
       from: `"Sistem RT Online" <${process.env.BREVO_SMTP_VERIFIED_EMAIL}>`,
       to: email,
-      subject: 'Surat Anda Telah Terbit - Sistem RT Online',
+      subject: 'Surat Anda Telah Terbit (Lampiran) - Sistem RT Online',
       html: getHtmlLayout('Surat Resmi Terbit', content),
+      attachments: [
+        {
+          filename: `${letterType.replace(/\s+/g, '_')}.pdf`,
+          content: pdfBuffer,
+          contentType: 'application/pdf',
+        },
+      ],
     });
   } catch (error) {
     console.error('Failed to send surat approved email:', error);
@@ -110,7 +115,7 @@ export async function sendSuratRejectedNotification(
   letterType: string, 
   reason: string
 ) {
-  const checkStatusLink = `${getBaseUrl()}/cek-status`;
+  const checkStatusLink = `${getBaseUrl()}/surat/cek-status`;
 
   const content = `
     <p style="font-size: 16px; margin-bottom: 20px;">Halo <strong>${name}</strong>,</p>
