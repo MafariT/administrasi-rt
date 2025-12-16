@@ -5,6 +5,7 @@ import {
   DocumentTextIcon,
   ShieldCheckIcon,
   EnvelopeIcon,
+  MagnifyingGlassIcon,
   QuestionMarkCircleIcon,
 } from '@heroicons/react/24/outline';
 
@@ -12,6 +13,7 @@ const iconMap: { [key: string]: React.ComponentType<any> } = {
   DocumentTextIcon,
   ShieldCheckIcon,
   EnvelopeIcon,
+  MagnifyingGlassIcon,
 };
 
 export default async function BantuanHubPage() {
