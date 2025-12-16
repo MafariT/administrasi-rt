@@ -49,8 +49,14 @@ export const columns: ColumnDef<WargaProfile>[] = [
           )}
 
           {status === 'ditolak' && (
-            <Badge className="bg-red-100 text-red-800 dark:bg-red-300 dark:text-black">
+            <Badge className="bg-gray-100 text-red-800 dark:bg-red-300 dark:text-black">
               Ditolak
+            </Badge>
+          )}
+
+          {status === 'non_aktif' && (
+            <Badge className="bg-gray-100 text-gray-800 dark:bg-gray-300 dark:text-black">
+              Non Aktif
             </Badge>
           )}
         </>

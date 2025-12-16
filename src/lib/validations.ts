@@ -119,7 +119,7 @@ export const updateWargaSchema = z.object({
     .email({ message: 'Format email tidak valid.' })
     .optional()
     .or(z.literal('')),
-  status: z.enum(['pending_verification', 'terdaftar', 'ditolak']),
+  status: z.enum(['pending_verification', 'terdaftar', 'ditolak', 'non_aktif']),
 });
 
 export const nikSchema = z.object({

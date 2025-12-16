@@ -51,6 +51,36 @@ export async function updateWargaProfile(formData: FormData) {
 export async function deleteWarga(wargaId: string) {
   const supabase = createClient();
 
+  const { count, error: countError } = await supabase
+    .from('surat_requests')
+    .select('*', { count: 'exact', head: true })
+    .eq('warga_id', wargaId);
+
+  if (countError) {
+    return { success: false, message: 'Gagal memeriksa riwayat surat warga.' };
+  }
+
+  if (count !== null && count > 0) {
+    const { error: updateError } = await supabase
+      .from('warga')
+      .update({ status: 'non_aktif' })
+      .eq('id', wargaId);
+
+    if (updateError) {
+      return {
+        success: false,
+        message: `Gagal mengarsipkan warga: ${updateError.message}`,
+      };
+    }
+
+    revalidatePath('/admin/users');
+    return {
+      success: true,
+      message:
+        'Warga memiliki riwayat surat. Data tidak dihapus tapi status diubah menjadi "Non-Aktif".',
+    };
+  }
+
   const { data: warga, error: fetchError } = await supabase
     .from('warga')
     .select('ktp_file_url, kk_file_url')
@@ -67,15 +97,18 @@ export async function deleteWarga(wargaId: string) {
   const filesToDelete = [warga.ktp_file_url, warga.kk_file_url].filter(
     Boolean
   ) as string[];
+
   if (filesToDelete.length > 0) {
     const { error: storageError } = await supabase.storage
       .from('berkas_pendukung')
       .remove(filesToDelete);
-    if (storageError)
+
+    if (storageError) {
       console.error(
-        'Error deleting files, but proceeding:',
+        'Error deleting files, but proceeding with row delete:',
         storageError.message
       );
+    }
   }
 
   const { error: deleteError } = await supabase
@@ -88,6 +121,6 @@ export async function deleteWarga(wargaId: string) {
   revalidatePath('/admin/users');
   return {
     success: true,
-    message: 'Data warga berhasil dihapus.',
+    message: 'Data warga dan berkas berhasil dihapus permanen.',
   };
 }

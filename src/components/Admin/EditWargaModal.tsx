@@ -233,6 +233,7 @@ export default function EditWargaModal({
                     </SelectItem>
                     <SelectItem value="terdaftar">Terdaftar</SelectItem>
                     <SelectItem value="ditolak">Ditolak</SelectItem>
+                    <SelectItem value="non_aktif">Non Aktif</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

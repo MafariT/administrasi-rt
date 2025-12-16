@@ -28,6 +28,7 @@ export default async function UserManagementContent() {
         { value: 'terdaftar', label: 'Terdaftar' },
         { value: 'pending_verification', label: 'Pending' },
         { value: 'ditolak', label: 'Ditolak' },
+        { value: 'non_aktif', label: 'Non Aktif' },
       ]}
     />
   );
