@@ -1,5 +1,6 @@
 'use server';
 
+import { sendSuratApprovedNotification, sendSuratRejectedNotification } from '@/lib/helper/notifications';
 import { generateSuratKeteranganPDF } from '@/lib/pdf-generator';
 import { createClient } from '@/lib/supabase/server';
 import { revalidatePath } from 'next/cache';
@@ -50,6 +51,12 @@ export async function approveSuratRequest(requestId: string) {
 
     if (updateError) throw updateError;
 
+    await sendSuratApprovedNotification(
+      request.warga.email,
+      request.warga.full_name,
+      request.letter_type
+    );
+
     revalidatePath('/admin/surat');
     return {
       success: true,
@@ -65,28 +72,37 @@ export async function approveSuratRequest(requestId: string) {
 }
 
 export async function rejectSuratRequest(requestId: string, reason: string) {
-  const supabase = createClient();
+  const supabase = createClient()
+  
   try {
+    const { data: request } = await supabase
+      .from('surat_requests')
+      .select('*, warga:warga_id(*)')
+      .eq('id', requestId)
+      .single();
+
     const { error } = await supabase
       .from('surat_requests')
-      .update({
+      .update({ 
         status: 'ditolak',
         rejection_reason: reason 
       })
-      .eq('id', requestId);
+      .eq('id', requestId)
+      
+    if (error) throw error
 
-    if (error) throw error;
-    revalidatePath('/admin/surat');
-    return {
-      success: true,
-      message: 'Permintaan surat ditolak.',
-    };
+    await sendSuratRejectedNotification(
+      request.warga.email, 
+      request.warga.full_name, 
+      request.letter_type, 
+      reason
+    );
+
+    revalidatePath('/admin/surat')
+    return { success: true, message: 'Permintaan surat ditolak.' }
   } catch (e) {
-    const error = e as Error;
-    return {
-      success: false,
-      message: `Gagal menolak: ${error.message}`,
-    };
+    const error = e as Error
+    return { success: false, message: `Gagal menolak: ${error.message}` }
   }
 }
 
