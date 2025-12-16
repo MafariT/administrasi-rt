@@ -18,8 +18,8 @@ export default async function SuratRequestContent() {
     <DataTable
       columns={columns}
       data={data as unknown as SuratRequest[]}
-      filterColumnId="letter_type"
-      filterColumnPlaceholder="Cari jenis surat..."
+      filterColumnId="warga"
+      filterColumnPlaceholder="Cari nama pemohon..."
       statusFilter={false}
     />
   );

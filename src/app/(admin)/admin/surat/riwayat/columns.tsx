@@ -8,11 +8,16 @@ import { DataTableColumnHeader } from '@/components/base/DataTableColumnHeader';
 
 export const columns: ColumnDef<SuratRequest>[] = [
   {
-    accessorKey: 'warga',
+    id: 'warga', 
+    accessorFn: (row) => row.warga?.full_name,
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="PEMOHON" />
     ),
-    cell: ({ row }) => <div>{row.original.warga?.full_name || 'N/A'}</div>,
+    cell: ({ row }) => (
+      <div className="font-medium">
+        {(row.getValue('warga') as string) || 'N/A'}
+      </div>
+    ),
     sortingFn: (rowA, rowB) => {
       const nameA = rowA.original.warga?.full_name || '';
       const nameB = rowB.original.warga?.full_name || '';

@@ -16,8 +16,8 @@ export default async function HistoryContent() {
     <DataTable
       columns={columns}
       data={data as unknown as SuratRequest[]}
-      filterColumnId="unique_number"
-      filterColumnPlaceholder="Cari nomor surat..."
+      filterColumnId="warga"
+      filterColumnPlaceholder="Cari nama pemohon..."
       statusFilter={true}
       statuses={[
         { value: 'selesai', label: 'Selesai' },
