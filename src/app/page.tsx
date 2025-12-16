@@ -69,6 +69,15 @@ export default function HomePage() {
       <Navbar />
       {/* Hero Section */}
       <section className="relative overflow-hidden h-screen">
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/img/landing-page.jpeg"
+            alt="Hero Background"
+            fill
+            className="object-cover object-right md:object-center"
+            priority
+          />
+        </div>
         <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-transparent to-transparent blur-3xl" />
 
         <div className="relative container mx-auto px-6 py-24 sm:py-32 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
@@ -100,7 +109,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="flex justify-center md:justify-end relative hidden md:flex">
+          {/* <div className="flex justify-center md:justify-end relative hidden md:flex">
             <div className="flex justify-center">
               <Image
                 src="/img/hero-illustration.svg"
@@ -110,7 +119,7 @@ export default function HomePage() {
                 priority
               />
             </div>
-          </div>
+          </div> */}
         </div>
       </section>
 
