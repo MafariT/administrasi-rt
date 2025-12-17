@@ -9,6 +9,7 @@ import {
   EnvelopeIcon,
   XMarkIcon,
   ClockIcon,
+  Cog6ToothIcon,
 } from '@heroicons/react/24/outline';
 
 const navigationGroups = [
@@ -44,6 +45,12 @@ const navigationGroups = [
         href: '/admin/surat/riwayat',
         icon: ClockIcon,
       },
+    ],
+  },
+  {
+    title: 'Sistem',
+    items: [
+      { name: 'Pengaturan', href: '/admin/pengaturan', icon: Cog6ToothIcon },
     ],
   },
 ];
